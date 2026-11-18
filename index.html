@@ -1,0 +1,2938 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>My Black Hole Research</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A plain-English guide to my research on colliding black holes and the ripples they make in space.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one calm reading column, widened once for the collision "stage" and the three starter ideas. Widgets sit in white panels inside the column. */
+:root {
+  --bg: #F1F3F8;          /* cool paper, tinted toward the ripple blue */
+  --surface: #FFFFFF;
+  --ink: #141A2A;
+  --ink-soft: #4C556B;
+  --rule: #D5DBE6;
+  --grid: #BCC6D8;        /* the "fabric of space" in the animations */
+  --wave: #2C5CA8;        /* ripples and signal lines */
+  --accent: #D9822B;      /* glow of hot gas around a black hole; graphics only */
+  --accent-ink: #8C4A08;  /* same hue, dark enough for text */
+  --hole: #05070D;
+  /* Illustration colors for the squeeze and trampoline pictures; they read on both themes. */
+  --earth: #3B78C9;
+  --land: #4E9A5B;
+  --moon: #B9B7AE;
+  --rock: #7D879A;
+  --snow: #F4F6FA;
+  --sun: #F3B23C;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", Verdana, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --read: 42rem;
+  --wide: 64rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1020; --surface: #131A2C; --ink: #E7EAF2; --ink-soft: #A1A9BE; --rule: #263049;
+    --grid: #34416A; --wave: #8FB4EE; --accent: #F2A24E; --accent-ink: #F5B672; --hole: #010207;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1020; --surface: #131A2C; --ink: #E7EAF2; --ink-soft: #A1A9BE; --rule: #263049;
+  --grid: #34416A; --wave: #8FB4EE; --accent: #F2A24E; --accent-ink: #F5B672; --hole: #010207;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  line-height: 1.62;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  -webkit-font-smoothing: antialiased;
+}
+main { display: grid; gap: clamp(3rem, 7vw, 5rem); padding-block: clamp(2rem, 5vw, 3.5rem) 2.5rem; }
+.wrap, .wide { width: 100%; margin-inline: auto; min-width: 0; }
+.wrap { max-width: var(--read); }
+.wide { max-width: var(--wide); }
+
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.25rem, 1.4rem + 4vw, 3.9rem); line-height: 1.04; font-weight: 800; letter-spacing: -0.025em; }
+h2 { font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.4rem); line-height: 1.1; font-weight: 800; letter-spacing: -0.015em; }
+h3 { font-size: 1.3rem; line-height: 1.25; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--wave); }
+strong { font-weight: 700; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.eyebrow, .tag, .label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.hero { display: grid; gap: 1rem; }
+.lede { font-size: 1.15em; color: var(--ink-soft); max-width: 34rem; }
+
+/* ---- The collision stage ---- */
+.stage { margin: 0; display: grid; gap: 0.9rem; }
+.sky-box {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.sky-box canvas, .sky-box svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.live .fallback { display: none; }
+.fb-grid { stroke: var(--grid); stroke-width: 0.6; fill: none; }
+.fb-ring { stroke: var(--wave); stroke-width: 1; fill: none; opacity: 0.45; }
+.fb-hole { fill: var(--hole); stroke: var(--accent); stroke-width: 1.6; }
+.note {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  background: var(--surface);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+#trace { width: 100%; height: 78px; display: block; }
+.stage-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.25rem; }
+.play {
+  font: 700 1.05rem/1 var(--font-display);
+  background: var(--ink);
+  color: var(--bg);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.95rem 1.45rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.play:hover { background: var(--accent-ink); }
+.play svg { width: 0.9em; height: 0.9em; fill: currentColor; }
+.acts { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 0; }
+.acts li {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+.acts li.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  line-height: 1;
+  flex: none;
+}
+.stage-notes { display: grid; gap: 0.45rem; max-width: var(--read); font-size: 0.95rem; color: var(--ink-soft); }
+@media (max-width: 600px) {
+  .sky-box { aspect-ratio: 1 / 1; }
+}
+
+/* ---- Widgets (shared) ---- */
+.widget {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  min-width: 0;
+}
+.w-canvas { width: 100%; display: block; }
+.h170 { height: 170px; }
+.h190 { height: 190px; }
+.h210 { height: 210px; }
+.h240 { height: 240px; }
+.h200 { height: 200px; }
+.mesh-canvas { aspect-ratio: 16 / 10; max-width: 100%; }
+.w-readout { font-size: 0.95rem; line-height: 1.45; min-height: 2.9em; }
+.mesh-readout { min-height: 4.35em; }  /* room for three lines, so the text changing during playback rarely moves the page */
+.w-note { font-size: 0.92rem; line-height: 1.5; color: var(--ink-soft); }
+.seg { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.seg button, .toggle {
+  font: 500 0.85rem/1 var(--font-mono);
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.seg button[aria-pressed="true"], .toggle[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.w-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
+.slider-row { display: grid; grid-template-columns: 3.6rem 1fr; align-items: center; gap: 0.75rem; font-size: 0.92rem; }
+.slider-row input { width: 100%; margin: 0; height: 28px; accent-color: var(--accent); }
+
+/* ---- Three ideas ---- */
+.basics { display: grid; gap: 1.25rem; }
+.ideas { display: grid; gap: 2.25rem 2rem; }
+.idea { display: grid; gap: 0.6rem; align-content: start; min-width: 0; }
+.idea .widget { margin-bottom: 0.4rem; }
+@media (min-width: 860px) {
+  .ideas { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto auto; }
+  .idea { grid-row: span 3; grid-template-rows: subgrid; }
+}
+
+/* ---- Act map ---- */
+.projects { display: grid; gap: 1.25rem; }
+.actmap { display: grid; gap: 0.75rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.actcard {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+  padding: 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  min-width: 0;
+}
+.actcard:hover { border-color: var(--ink-soft); }
+.actcard canvas { width: 100%; height: 54px; display: block; }
+.actcard .tag { color: var(--accent-ink); }
+.actcard-title { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; line-height: 1.2; }
+@media (max-width: 560px) {
+  .actmap { grid-template-columns: 1fr; }
+  .actcard { grid-template-columns: 6.5rem minmax(0, 1fr); column-gap: 0.9rem; align-items: center; }
+  .actcard canvas { grid-row: span 2; height: 46px; }
+}
+
+/* ---- Projects ---- */
+.project { display: grid; gap: 0.9rem; padding-top: 2rem; margin-top: 0.75rem; border-top: 1px solid var(--rule); scroll-margin-top: 1rem; }
+.project h3 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); line-height: 1.15; font-weight: 800; letter-spacing: -0.01em; }
+.tag { display: inline-flex; align-items: center; gap: 0.5rem; }
+.act-line { font-style: italic; color: var(--ink-soft); }
+.analogy {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.analogy .label { color: var(--wave); }
+.analogy.why .label { color: var(--accent-ink); }
+.official { font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.5; color: var(--ink-soft); display: grid; gap: 0.15rem; }
+.official .label { color: var(--ink-soft); }
+
+/* Compute race */
+.race-row { display: grid; gap: 0.45rem; }
+.race-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem; font-size: 0.92rem; }
+.race-name { font-weight: 700; }
+.race-val { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.days { display: flex; flex-wrap: wrap; gap: 3px; }
+.day { width: 10px; height: 10px; border-radius: 2px; background: var(--wave); }
+.day.empty { background: var(--rule); }
+.btn {
+  font: 700 1rem/1 var(--font-display);
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.btn.secondary { background: transparent; color: var(--ink); }
+.btn.small { font-size: 0.9rem; padding: 0.6rem 0.95rem; }
+
+/* Match game */
+.legend { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; font-size: 0.86rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.sw { display: inline-block; width: 22px; height: 0; border-top: 2.5px solid var(--wave); }
+.sw.fit { border-top-style: dashed; border-top-color: var(--accent); }
+.sw.l1 { border-top-color: var(--accent); }
+.sw.nr { border-top-color: var(--ink); border-top-width: 1.5px; }
+.meter { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 0.4rem 0.75rem; }
+.meter-num { font-weight: 700; font-size: 1.65rem; line-height: 1; }
+.meter-label { font-family: var(--font-mono); font-size: 0.86rem; color: var(--ink-soft); }
+.meter-bar { position: relative; grid-column: 1 / -1; height: 10px; border-radius: 999px; background: var(--rule); }
+.meter-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: var(--wave); transition: width 0.15s; }
+.meter-goal { position: absolute; top: -5px; bottom: -5px; left: 66.67%; width: 2px; background: var(--ink); }
+.meter-scale { grid-column: 1 / -1; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-soft); }
+
+/* ---- Short version ---- */
+.short { display: grid; gap: 1rem; }
+.short blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.45rem, 1.1rem + 1.6vw, 2.05rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.short .after { color: var(--ink-soft); }
+
+/* ---- Glossary ---- */
+.words { display: grid; gap: 1rem; }
+.terms { display: grid; gap: 1rem; margin: 0.25rem 0 0; }
+.term { display: grid; gap: 0.15rem 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+.term dt { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+.term dd { margin: 0; color: var(--ink-soft); min-width: 0; }
+@media (min-width: 640px) {
+  .term { grid-template-columns: 10.5rem 1fr; }
+}
+
+/* ---- Ask Claude ---- */
+.ask { display: grid; gap: 1rem; }
+.prompt-box {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem;
+  display: grid;
+  gap: 1rem;
+}
+.prompt {
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  -webkit-user-select: all;
+  user-select: all;
+}
+.prompt-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: center; }
+.status { font-size: 0.92rem; color: var(--ink-soft); flex-basis: 100%; min-height: 1.4em; }
+.ask .after { color: var(--ink-soft); }
+
+footer {
+  max-width: var(--read);
+  margin: 0 auto;
+  padding-block: 1.5rem 3rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+
+<main>
+  <header class="hero wrap">
+    <p class="eyebrow">For my family · about a 10-minute read</p>
+    <h1>I study the ripples black holes make in space.</h1>
+    <p class="lede">In short: I crash black holes together on supercomputers, build faster formulas for the ripples they make, and study a faint hum from giant black holes across the universe. Press play to watch one collision.</p>
+  </header>
+
+  <figure class="stage wide" id="stage">
+    <div class="sky-box">
+      <svg class="fallback" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <pattern id="fbgrid" width="16" height="16" patternUnits="userSpaceOnUse">
+            <path d="M16 0H0V16" class="fb-grid"></path>
+          </pattern>
+        </defs>
+        <rect width="320" height="180" fill="url(#fbgrid)"></rect>
+        <circle cx="160" cy="90" r="56" class="fb-ring"></circle>
+        <circle cx="160" cy="90" r="78" class="fb-ring"></circle>
+        <circle cx="134" cy="90" r="12" class="fb-hole"></circle>
+        <circle cx="186" cy="90" r="12" class="fb-hole"></circle>
+      </svg>
+      <canvas id="sky" role="img" aria-label="Animation: two black holes circle each other, spiral closer and faster, merge into one, and send ripples across a grid that stands for space."></canvas>
+      <p class="note">The grid is like graph paper drawn on space, so you can see it bend.</p>
+    </div>
+    <canvas id="trace" role="img" aria-label="The ripple signal over time: small, slow wiggles that grow bigger and faster, a peak at the crash, then a fading ring."></canvas>
+    <div class="stage-foot">
+      <button id="play" class="play" type="button">
+        <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 0.8 9 5 1.5 9.2Z"></path></svg>
+        <span id="play-label">Play a black hole collision</span>
+      </button>
+      <ol class="acts" id="acts" aria-label="The three acts of a collision">
+        <li data-act="1"><span class="num">1</span>Spiral in</li>
+        <li data-act="2"><span class="num">2</span>Crash</li>
+        <li data-act="3"><span class="num">3</span>Ring down</li>
+      </ol>
+    </div>
+    <figcaption class="stage-notes">
+      <p>Turn your sound on. On a phone, check that it isn’t on silent.</p>
+      <p>These ripples aren’t sound, but they wiggle tens to hundreds of times a second, like a low musical note, so we can turn them into sound. This one follows a real collision, stretched out and raised in pitch so a phone can play it. The wiggly line underneath is the ripple itself.</p>
+    </figcaption>
+  </figure>
+
+  <section class="basics wide" aria-labelledby="basics-h">
+    <h2 id="basics-h">Three ideas first</h2>
+    <div class="ideas">
+      <div class="idea">
+        <h3>A black hole is a lot of stuff in a tiny space.</h3>
+        <p>Its gravity is so strong that not even light gets out. Pick something below to squeeze.</p>
+        <div class="widget" id="squeeze">
+          <canvas id="squeeze-canvas" class="w-canvas h170" role="img" aria-label="The object you picked shrinks down into a tiny black hole, which is then shown to scale beside something familiar, with its radius marked."></canvas>
+          <div class="seg" id="squeeze-seg" role="group" aria-label="Pick something to squeeze into a black hole">
+            <button type="button" data-key="you" aria-pressed="false">You</button>
+            <button type="button" data-key="everest" aria-pressed="false">Everest</button>
+            <button type="button" data-key="moon" aria-pressed="false">Moon</button>
+            <button type="button" data-key="earth" aria-pressed="true">Earth</button>
+            <button type="button" data-key="sun" aria-pressed="false">Sun</button>
+          </div>
+          <p class="w-readout" aria-live="polite"><strong id="squeeze-result">About a dime</strong><br><span class="w-note" id="squeeze-detail">All of Earth, squeezed to 0.7 inches across, almost exactly a dime.</span></p>
+        </div>
+      </div>
+
+      <div class="idea">
+        <h3>Heavy things bend space.</h3>
+        <p>Like a weight on a trampoline. Swing heavy things around fast and the dents ripple outward. Those ripples are gravitational waves.</p>
+        <div class="widget" id="bend">
+          <canvas id="bend-canvas" class="w-canvas h170" role="img" aria-label="A stretchy sheet with a dip in the middle that gets deeper for heavier things."></canvas>
+          <div class="seg" id="bend-seg" role="group" aria-label="Pick what to put on the sheet">
+            <button type="button" data-key="none" aria-pressed="false">Nothing</button>
+            <button type="button" data-key="earth" aria-pressed="false">Earth</button>
+            <button type="button" data-key="sun" aria-pressed="true">Sun</button>
+            <button type="button" data-key="hole" aria-pressed="false">Black hole</button>
+          </div>
+          <p class="w-readout" id="bend-readout" aria-live="polite">A deep dip, enough to keep every planet circling the Sun.</p>
+        </div>
+      </div>
+
+      <div class="idea">
+        <h3>We can finally feel the ripples.</h3>
+        <p>LIGO caught its first in 2015, from two black holes that collided over a billion years ago. It won the 2017 Nobel Prize in Physics.</p>
+        <div class="widget" id="ligo">
+          <p class="w-readout">LIGO has two giant L-shaped detectors, one in Washington and one in Louisiana. A passing ripple stretches one arm of the L and squeezes the other, and lasers measure the change. This is what both recorded on September 14, 2015.</p>
+          <div class="legend"><span><i class="sw"></i>Washington detector</span><span><i class="sw l1"></i>Louisiana detector</span><span><i class="sw nr"></i>Thin line: a supercomputer simulation of this crash</span></div>
+          <canvas id="ligo-canvas" class="w-canvas h200" role="img" aria-label="The first gravitational wave ever detected, on September 14, 2015, as two wiggly lines from LIGO's detectors in Washington and Louisiana. Both grow faster and bigger, peak, and die away within about a fifth of a second, matching the thin line, a supercomputer simulation of the same crash."></canvas>
+          <div class="w-controls"><button type="button" class="btn small" id="ligo-play">Hear it</button></div>
+          <p class="w-note">Up and down is the stretch. At its biggest, the 2.5-mile arms changed length by less than a hundredth of a proton’s width. Two detectors far apart saw the same thing, so it was real. The sound is the real recording, raised in pitch.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects wrap" aria-labelledby="projects-h">
+    <h2 id="projects-h">Three acts, three projects</h2>
+    <p>Every collision plays out in the three acts you just watched. Each of my projects zooms in on one.</p>
+    <nav class="actmap" id="actmap" aria-label="Jump to a project">
+      <a class="actcard" href="#act-1">
+        <canvas aria-hidden="true"></canvas>
+        <span class="tag"><span class="num">1</span>Spiral in</span>
+        <span class="actcard-title">The hum of giant black holes</span>
+      </a>
+      <a class="actcard" href="#act-2">
+        <canvas aria-hidden="true"></canvas>
+        <span class="tag"><span class="num">2</span>Crash</span>
+        <span class="actcard-title">Crashing black holes on a supercomputer</span>
+      </a>
+      <a class="actcard" href="#act-3">
+        <canvas aria-hidden="true"></canvas>
+        <span class="tag"><span class="num">3</span>Ring down</span>
+        <span class="actcard-title">A shortcut for the ringing</span>
+      </a>
+    </nav>
+
+    <article class="project" id="act-1">
+      <p class="tag"><span class="num">1</span>Spiral in</p>
+      <h3>The hum of giant black holes</h3>
+      <p class="act-line">In act one, two black holes circle each other, getting closer and faster.</p>
+      <p><strong>My part:</strong> working out how many giant black hole pairs are out there, and how big they are, from the faint ripples they all make together.</p>
+      <p>Most big galaxies have a giant black hole at the center, millions to billions of times heavier than the Sun. When galaxies merge, the two giants pair up and circle each other for millions of years.</p>
+      <p>One of their ripples takes years to pass, too slow for any detector on Earth. So astronomers time pulsars, dead stars that flash like lighthouses with near-perfect regularity. A passing ripple makes the flashes arrive early or late.</p>
+      <div class="widget" id="pulsar">
+        <canvas id="pulsar-canvas" class="w-canvas h240" role="img" aria-label="A pulsar on the left sends evenly spaced flashes along a line to Earth on the right. Below, each flash's arrival is plotted as early, on time, or late. When a gravitational wave passes the pulsar, the pulsar jiggles toward and away from Earth, its flashes bunch up and spread out, and their arrival times trace out the wave."></canvas>
+        <div class="seg" id="pulsar-seg" role="group" aria-label="Send a gravitational wave past the pulsar?">
+          <button type="button" data-key="off" aria-pressed="true">No wave</button>
+          <button type="button" data-key="on" aria-pressed="false">Send a wave past the pulsar</button>
+        </div>
+        <p class="w-note">The wave jiggles the pulsar toward and away from us, so its flashes land early or late. Each dot is one flash. The real wobble is far too small to see, so it’s blown up here.</p>
+      </div>
+      <p>In 2023 the NANOGrav team, which times dozens of pulsars, found signs of a faint, steady “hum” of these ripples, most likely from all the giant pairs at once. It isn’t a sound. It’s a background of countless overlapping waves, like the murmur of a crowd.</p>
+      <p>I build pretend universes full of giant pairs and check which ones make the hum we measure.</p>
+      <div class="widget" id="crowd">
+        <canvas id="crowd-canvas" class="w-canvas h210" role="img" aria-label="Pairs of black holes scattered across the sky, and below them the combined ripple signal they make."></canvas>
+        <div class="seg" id="crowd-seg" role="group" aria-label="How many giant black hole pairs">
+          <button type="button" data-key="1" aria-pressed="true">1 pair</button>
+          <button type="button" data-key="10" aria-pressed="false">10</button>
+          <button type="button" data-key="100" aria-pressed="false">100</button>
+          <button type="button" data-key="1000" aria-pressed="false">1,000</button>
+        </div>
+        <p class="w-readout" id="crowd-readout" aria-live="polite">One pair makes a clean wave, easy to pick out. Now add more.</p>
+      </div>
+      <aside class="analogy why">
+        <p class="label">Why it matters</p>
+        <p>The hum is a record of galaxies colliding and growing over billions of years, written in ripples instead of light.</p>
+      </aside>
+    </article>
+
+    <article class="project" id="act-2">
+      <p class="tag"><span class="num">2</span>Crash</p>
+      <h3>Crashing black holes on a supercomputer</h3>
+      <p class="act-line">In act two, the black holes crash and become one, in a fraction of a second.</p>
+      <p><strong>My part:</strong> crashing black holes together inside a supercomputer. My twist is that my black holes carry electric charge, the same stuff behind static electricity. Real ones probably carry very little, but nobody knows for sure.</p>
+      <p>Einstein’s equations for a collision are too tangled to solve with pencil and paper. Instead, a supercomputer chops space into boxes, like the pixels of a photo, and keeps track of how bent space is in each one. Then it steps everything forward in time, a sliver at a time. The boxes get smaller near the black holes, where things change fastest.</p>
+      <div class="widget" id="mesh">
+        <canvas id="mesh-canvas" class="w-canvas mesh-canvas" role="img" aria-label="Space divided into boxes, from one of my simulations: big boxes far away, smaller and smaller boxes nested around the black holes, whose edges are drawn as black circles. Press play to watch the boxes follow the black holes as they spiral together and merge."></canvas>
+        <label class="slider-row" for="mesh-zoom"><span>Zoom</span><input type="range" id="mesh-zoom" min="0" max="10.6" step="0.01" value="7"></label>
+        <label class="slider-row" for="mesh-time"><span>Time</span><input type="range" id="mesh-time" min="0" max="110" step="0.1" value="0"></label>
+        <div class="w-controls">
+          <button type="button" class="btn small" id="mesh-play">Play the merger</button>
+        </div>
+        <p class="w-readout mesh-readout" id="mesh-readout">The black circles are the black holes, at their true size. The smallest boxes crowd around them, where things change fastest. Zoomed in 130 times.</p>
+        <p class="w-note">From one of my real simulations, with the boxes drawn bigger so you can see them. Slide Zoom all the way left to see the whole thing.</p>
+      </div>
+      <p>All those boxes take a lot of computing. Here’s one of my recent runs, next to a laptop doing the same job.</p>
+      <div class="widget race" id="race">
+        <div class="race-row">
+          <div class="race-head"><span class="race-name">Supercomputer · 256 processors</span><span class="race-val" id="race-a">4 days</span></div>
+          <div class="days" id="days-a" aria-hidden="true"></div>
+        </div>
+        <div class="race-row">
+          <div class="race-head"><span class="race-name">Laptop · 8 processors</span><span class="race-val" id="race-b">127 days (about 4 months)</span></div>
+          <div class="days" id="days-b" aria-hidden="true"></div>
+        </div>
+        <div class="w-controls">
+          <button type="button" class="btn small" id="race-go">Watch them race</button>
+          <span class="w-note" id="race-clock" aria-live="polite">Each square is one day.</span>
+        </div>
+        <p class="w-note">That’s if a laptop even had enough memory. It doesn’t.</p>
+      </div>
+      <aside class="analogy why">
+        <p class="label">Why it matters</p>
+        <p>If black holes carry even a little charge, their collisions send out slightly different ripples. Knowing exactly what that looks like lets us check real signals for it, or rule it out.</p>
+      </aside>
+      <aside class="analogy">
+        <p class="label">Think of it like</p>
+        <p>Car crash tests. Engineers can’t learn everything about a crash from formulas, so they crash real cars and film them. I do the same with black holes, inside a computer.</p>
+      </aside>
+    </article>
+
+    <article class="project" id="act-3">
+      <p class="tag"><span class="num">3</span>Ring down</p>
+      <h3>A shortcut for the ringing</h3>
+      <p class="act-line">In act three, the new black hole rings like a struck bell, then goes quiet.</p>
+      <p><strong>My part:</strong> a shortcut formula that predicts the ringing in a split second, instead of days on a supercomputer.</p>
+      <p>Detectors need a huge library of possible signals to compare against, and each supercomputer run takes days. The shortcut is a formula nicknamed BOB.</p>
+      <p>My job is making the formula match supercomputer crashes like the ones in act two. Try it yourself: find the right pitch and fade.</p>
+      <div class="widget" id="match">
+        <p class="w-note">Pitch is how fast the ringing wiggles. Fade is how long it lasts. Slide them until the dashed line covers the solid one.</p>
+        <div class="legend"><span><i class="sw"></i>Supercomputer</span><span><i class="sw fit"></i>My formula</span></div>
+        <canvas id="match-canvas" class="w-canvas h190" role="img" aria-label="Two wiggly signals around the moment of the crash: the supercomputer's answer and the formula's guess."></canvas>
+        <div class="meter">
+          <span class="meter-num" id="mm-num">0.000</span>
+          <span class="meter-label">mismatch (0 = perfect match) · goal: under 0.01</span>
+          <div class="meter-bar" aria-hidden="true"><div class="meter-fill" id="mm-fill"></div><div class="meter-goal"></div></div>
+          <div class="meter-scale" aria-hidden="true"><span>worse</span><span>better</span></div>
+        </div>
+        <p class="w-readout" id="mm-msg" aria-live="polite"></p>
+        <label class="slider-row" for="mm-pitch"><span>Pitch</span><input type="range" id="mm-pitch" min="0.7" max="1.3" step="0.001" value="0.8"></label>
+        <label class="slider-row" for="mm-fade"><span>Fade</span><input type="range" id="mm-fade" min="2" max="12" step="0.05" value="3.5"></label>
+        <div class="w-controls">
+          <button type="button" class="btn small secondary" id="mm-answer">Show my answer</button>
+        </div>
+      </div>
+      <p><strong>In real life</strong>, the pitch and fade aren’t guesses. They’re set by the new black hole’s mass and spin, and the work is getting the formula right, ringing and all, for every kind of collision.</p>
+      <aside class="analogy why">
+        <p class="label">Why it matters</p>
+        <p>Every new detection is identified by comparing it with predicted signals. Faster, more accurate formulas mean more collisions found, and sharper measurements of the black holes in them.</p>
+      </aside>
+      <aside class="analogy">
+        <p class="label">Think of it like</p>
+        <p>A song-recognition app. It can name a song because it already knows what every song sounds like. Detectors need the same kind of songbook for black hole collisions, and a fast, accurate formula is how you fill it.</p>
+      </aside>
+    </article>
+  </section>
+
+  <section class="short wrap" aria-labelledby="short-h">
+    <p class="eyebrow" id="short-h">If someone asks what I do</p>
+    <blockquote>“I simulate black holes crashing into each other on supercomputers, build faster formulas for the ripples they send through space, and study the faint hum from giant black holes across the universe.”</blockquote>
+    <p class="after">Shorter still: “Black holes. Crashing ones.”</p>
+  </section>
+
+  <section class="words wrap" aria-labelledby="words-h">
+    <h2 id="words-h">Words you might hear me use</h2>
+    <dl class="terms">
+      <div class="term"><dt>Gravitational waves</dt><dd>Ripples in space itself, made by heavy things moving fast.</dd></div>
+      <div class="term"><dt>LIGO</dt><dd>Two giant L-shaped detectors, in Washington and Louisiana, that feel gravitational waves passing Earth.</dd></div>
+      <div class="term"><dt>Merger</dt><dd>The moment two black holes become one.</dd></div>
+      <div class="term"><dt>Ringdown</dt><dd>The fading ring of the new black hole right after a merger.</dd></div>
+      <div class="term"><dt>Waveform</dt><dd>The ripple signal drawn as a wiggly line over time, like the one under the animation at the top.</dd></div>
+      <div class="term"><dt>Pulsar</dt><dd>A burned-out star that spins and flashes like a lighthouse, keeping near-perfect time.</dd></div>
+      <div class="term"><dt>Spin</dt><dd>Black holes spin, some of them close to the fastest rate nature allows.</dd></div>
+      <div class="term"><dt>A run</dt><dd>One supercomputer simulation. “My run crashed” almost always means the computer program, not the black holes.</dd></div>
+      <div class="term"><dt>Mismatch</dt><dd>A score for how far my formula is from the supercomputer’s answer, like in the game above. 0 is a perfect match.</dd></div>
+    </dl>
+    <div class="official">
+      <p class="label">The official names, if you want to look them up</p>
+      <p>The hum: supermassive black hole binary populations and the nanohertz gravitational-wave background</p>
+      <p>The crash: numerical relativity simulations of charged binary black holes</p>
+      <p>The ringing: merger–ringdown modeling with the Backwards One Body (BOB) model</p>
+    </div>
+  </section>
+
+  <section class="ask wrap" aria-labelledby="ask-h">
+    <h2 id="ask-h">Still curious? Ask Claude.</h2>
+    <p>Claude is an AI assistant you can chat with, in its app or a web browser. Copy the note below, paste it into a new chat, and type your question at the end. It tells Claude what I work on and asks it to keep things simple.</p>
+    <div class="prompt-box">
+      <p class="prompt" id="prompt">Someone in my family does physics research on black holes and gravitational waves. The work has three parts. (1) Simulating collisions of electrically charged black holes on supercomputers. (2) Improving the “Backwards One Body” (BOB) formula, which predicts how a black hole rings right after two black holes merge. (3) Modeling the giant black hole pairs at the centers of merging galaxies, and the faint background hum of gravitational waves that the NANOGrav team found by timing pulsars. I have no science background. Please explain simply, use everyday comparisons, skip the math, and keep answers short. My question:</p>
+      <div class="prompt-actions">
+        <button class="btn" id="copy" type="button">Copy the note</button>
+        <a class="btn secondary" href="https://claude.ai/new" target="_blank" rel="noopener">Open Claude</a>
+        <p class="status" id="copy-status" role="status"></p>
+      </div>
+    </div>
+    <p class="after">Or just ask me next time we talk.</p>
+  </section>
+</main>
+
+<footer>Made for the family · November 2026</footer>
+
+<script>
+(function () {
+  "use strict";
+  const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = 2 * Math.PI;
+  const MONO_FONT = '500 12px "IBM Plex Mono", ui-monospace, monospace';
+
+  // ===========================================================================
+  // Shared helpers
+  // ===========================================================================
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement);
+    function v(name) { return cs.getPropertyValue(name).trim(); }
+    return {
+      ink: v("--ink"), soft: v("--ink-soft"), rule: v("--rule"), grid: v("--grid"), surface: v("--surface"),
+      wave: v("--wave"), accent: v("--accent"), hole: v("--hole"),
+      earth: v("--earth"), land: v("--land"), moon: v("--moon"), rock: v("--rock"), snow: v("--snow"), sun: v("--sun"),
+    };
+  }
+
+  // Size a canvas's pixel buffer to its CSS box (sharp on high-density screens). Drawing then uses CSS px.
+  function fitCanvas(canvas) {
+    const box = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.round(box.width * dpr));
+    canvas.height = Math.max(1, Math.round(box.height * dpr));
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx: ctx, w: box.width, h: box.height, dpr: dpr };
+  }
+
+  function clamp01(x) { return Math.min(1, Math.max(0, x)); }
+  function lerp(a, b, u) { return a + (b - a) * u; }
+  function smoothstep(a, b, x) { const u = clamp01((x - a) / (b - a)); return u * u * (3 - 2 * u); }
+  function easeInOut(u) { return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; }
+
+  // mulberry32: a tiny seeded random-number generator, so the crowd of black holes looks the same every visit.
+  function seededRandom(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // A single small black hole: glowing rim, black middle.
+  function drawDot(c, x, y, r, col) {
+    c.save();
+    c.shadowColor = col.accent;
+    c.shadowBlur = r * 1.2;
+    c.strokeStyle = col.accent;
+    c.lineWidth = Math.max(1.5, r * 0.22);
+    c.beginPath();
+    c.arc(x, y, r, 0, TAU);
+    c.stroke();
+    c.restore();
+    c.fillStyle = col.hole;
+    c.beginPath();
+    c.arc(x, y, r * 0.95, 0, TAU);
+    c.fill();
+  }
+
+  // Segmented buttons: mark the clicked one as pressed and report its data-key.
+  function wireSeg(group, onPick) {
+    group.addEventListener("click", function (e) {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      group.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String(b === btn)); });
+      onPick(btn.dataset.key);
+    });
+  }
+
+  function now() { return performance.now() / 1000; }
+
+  // ===========================================================================
+  // Scene manager: one animation loop for every picture on the page.
+  // A scene redraws when something changed ("dirty") or while it is animating,
+  // and only while it is on screen.
+  // ===========================================================================
+  const scenes = [];
+  const sceneOf = new Map();
+  let looping = false;
+  function frame(ms) {
+    const t = ms / 1000;
+    const col = readColors();
+    let again = false;
+    for (const s of scenes) {
+      if (!s.visible) continue;
+      const moving = s.moving(t);
+      if (moving || s.dirty) {
+        s.draw(t, col);
+        s.dirty = false;
+      }
+      if (moving) again = true;
+    }
+    if (again) requestAnimationFrame(frame);
+    else looping = false;
+  }
+  function kick() {
+    if (looping) return;
+    looping = true;
+    requestAnimationFrame(frame);
+  }
+  function refresh(scene) { scene.dirty = true; kick(); }
+  const visibilityWatcher = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      const s = sceneOf.get(e.target);
+      s.visible = e.isIntersecting;
+      s.dirty = true;
+    });
+    kick();
+  });
+  const sizeWatcher = new ResizeObserver(function (entries) {
+    entries.forEach(function (e) {
+      const s = sceneOf.get(e.target);
+      s.layout();
+      s.dirty = true;
+    });
+    kick();
+  });
+  function addScene(el, scene) {
+    scene.visible = false;
+    scene.dirty = true;
+    scene.layout();
+    scenes.push(scene);
+    sceneOf.set(el, scene);
+    visibilityWatcher.observe(el);
+    sizeWatcher.observe(el);
+    return scene;
+  }
+  function redrawAll() {
+    scenes.forEach(function (s) { s.dirty = true; });
+    kick();
+  }
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", redrawAll);
+  new MutationObserver(redrawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  document.fonts.ready.then(redrawAll);
+
+  // ===========================================================================
+  // The collision model, shared by the sound, the top animation, the wiggly
+  // line and the act cards.
+  // While the pair spirals in, the ripple's frequency rises as f ∝ (t_c − t)^(−3/8)
+  // and its strength as A ∝ f^(2/3): the leading-order "chirp" of two orbiting
+  // masses (Einstein's quadrupole formula). After the crash, the new black hole
+  // rings at a single pitch that fades exponentially.
+  // Frequencies are in units of the starting frequency (f = 1 at t = 0); the
+  // sound and the pictures scale them by their own factors (F0_AUDIO, F0_VIS),
+  // because the real thing is far too fast to watch.
+  // ===========================================================================
+  const T_PEAK = 3.4;                       // s from pressing Play to the crash (loudest moment)
+  const F_RATIO = 4.33;                     // pitch at the crash ÷ pitch at the start
+  const RING_RATIO = 1.25;                  // pitch of the ringing ÷ pitch at the crash
+  const TAU_RING = 0.25;                    // s for the ringing to fade by a factor e (slowed a lot from real life)
+  const MERGE_DUR = 0.15;                   // s for the two black holes to melt into one (picture only)
+  const ACT2_START = T_PEAK - 0.25;         // act label switches to "Crash"
+  const ACT3_START = T_PEAK + MERGE_DUR;    // act label switches to "Ring down"
+  const END = T_PEAK + 2.0;                 // last ripples have left the picture
+  const TRACE_END = T_PEAK + 4 * TAU_RING;  // right edge of the wiggly line
+
+  // Chirp-law bookkeeping. tau = time left until the pair would touch.
+  const TAU0 = T_PEAK / (1 - Math.pow(1 / F_RATIO, 8 / 3));  // tau at t = 0, so f rises by F_RATIO in T_PEAK
+  const TAU_END = TAU0 - T_PEAK;                              // tau at the crash
+  const A_START = Math.pow(1 / F_RATIO, 2 / 3);               // starting strength relative to the crash (≈ 0.38)
+
+  // Cycles completed by time t: the integral of f(t) = (TAU0 / tau)^(3/8) from 0 to t.
+  function inspiralCycles(t) {
+    const tau = TAU0 - t;
+    return 1.6 * Math.pow(TAU0, 0.375) * (Math.pow(TAU0, 0.625) - Math.pow(tau, 0.625));
+  }
+  const CYCLES_AT_PEAK = inspiralCycles(T_PEAK);
+
+  // Strength A (1 at the crash) and cycles completed, t seconds after Play.
+  function chirp(t) {
+    if (t <= T_PEAK) {
+      const tau = TAU0 - t;
+      return { A: Math.pow(TAU_END / tau, 0.25), cycles: inspiralCycles(t) };
+    }
+    const after = t - T_PEAK;
+    return { A: Math.exp(-after / TAU_RING), cycles: CYCLES_AT_PEAK + RING_RATIO * F_RATIO * after };
+  }
+
+  const F0_VIS = 1.4;  // ripple cycles per second at the start of the pictures (the pair goes round 0.7 times a second)
+
+  // ===========================================================================
+  // Top animation: two black holes, a rippling grid, and the wiggly line
+  // ===========================================================================
+  // Every press of Play is kept, so ripples already travelling outward keep the shape they left with.
+  const starts = [];
+  function sinceLastPlay(t) {
+    if (starts.length === 0) return -1;
+    return t - starts[starts.length - 1];
+  }
+  function signalAt(tAbs) {
+    for (let i = starts.length - 1; i >= 0; i--) {
+      if (tAbs >= starts[i]) {
+        const c = chirp(tAbs - starts[i]);
+        return { A: c.A, cycles: starts[i] + c.cycles };
+      }
+    }
+    // Before any Play: steady circling at the starting pace.
+    return { A: A_START, cycles: tAbs };
+  }
+
+  const ORBIT_FRAC = 0.22;    // starting distance of each black hole from the center ÷ shorter side of the picture
+  const MERGED_SIZE = 1.7;    // radius of the new black hole ÷ radius of each original one
+  const WOBBLE = 0.14;        // how squashed the new black hole is right after the crash
+  const SPEED_FRAC = 0.42;    // ripple speed, in lengths of the longer side per second
+  const RIPPLE_FRAC = 0.028;  // biggest ripple displacement ÷ shorter side
+  const DENT_FRAC = 0.5;      // how far each black hole pulls the grid toward itself, × its radius
+  const GRID_CELLS = 14;      // grid squares across the shorter side
+  const SAMPLE_PX = 6;        // spacing of points along each grid line, CSS px
+
+  const heroEl = document.getElementById("stage");
+  const skyCanvas = document.getElementById("sky");
+  const traceCanvas = document.getElementById("trace");
+  const playBtn = document.getElementById("play");
+  const playLabel = document.getElementById("play-label");
+  const actEls = document.querySelectorAll("#acts li");
+  heroEl.classList.add("live");
+
+  let sky = null;        // geometry of the main picture, CSS px
+  let trace = null;      // geometry of the wiggly line, CSS px
+  let tracePath = null;  // the full wiggly line, built once per resize
+
+  // Where the black holes are at time t. Each is an ellipse {x, y, rx, ry, rot}.
+  function holesAt(t) {
+    const g = sky;
+    const sig = signalAt(t);
+    const psi = Math.PI * F0_VIS * sig.cycles;  // orbit angle = half the ripple phase (two ripples per orbit)
+    const s = sinceLastPlay(t);
+    if (s < 0 || s <= T_PEAK) {
+      // Kepler: separation ∝ f^(−2/3) ∝ 1/A, so each sits r0 from the center at the start and they touch at the crash.
+      const r = (g.r0 * A_START) / sig.A;
+      const dx = r * Math.cos(psi);
+      const dy = r * Math.sin(psi);
+      return [
+        { x: g.cx + dx, y: g.cy + dy, rx: g.rb, ry: g.rb, rot: 0 },
+        { x: g.cx - dx, y: g.cy - dy, rx: g.rb, ry: g.rb, rot: 0 },
+      ];
+    }
+    if (s <= T_PEAK + MERGE_DUR) {
+      const u = (s - T_PEAK) / MERGE_DUR;  // 0 → 1 while they melt together
+      const r = g.rb * (1 - u);
+      const dx = r * Math.cos(psi);
+      const dy = r * Math.sin(psi);
+      const grown = g.rb * (1 + (MERGED_SIZE - 1) * u);
+      return [
+        { x: g.cx + dx, y: g.cy + dy, rx: g.rb, ry: g.rb, rot: 0 },
+        { x: g.cx - dx, y: g.cy - dy, rx: g.rb, ry: g.rb, rot: 0 },
+        { x: g.cx, y: g.cy, rx: grown, ry: grown, rot: 0 },
+      ];
+    }
+    // Ringing: a spinning, slightly squashed shape that relaxes to round.
+    const eps = WOBBLE * Math.exp(-(s - T_PEAK) / TAU_RING);
+    const R = g.rb * MERGED_SIZE;
+    return [{ x: g.cx, y: g.cy, rx: R * (1 + eps), ry: R * (1 - eps), rot: psi }];
+  }
+
+  // Displace one grid point: the outgoing ripple, plus each black hole's pull.
+  const warped = [0, 0];
+  function warp(x, y, t, holes) {
+    const g = sky;
+    const dx = x - g.cx;
+    const dy = y - g.cy;
+    const R = Math.hypot(dx, dy);
+    let ox = 0;
+    let oy = 0;
+    if (R > 1) {
+      // The ripple arriving here left the center R / v seconds ago.
+      const sig = signalAt(t - R / g.v);
+      const theta = Math.atan2(dy, dx);
+      // Two-armed pattern: crests line up with the pair at the moment they left.
+      const wave = Math.cos(TAU * F0_VIS * sig.cycles - 2 * theta);
+      // Fade in outside the orbit; weaken with distance as 1/√R (gentler than the real 1/R, so it stays visible).
+      const inner = smoothstep(0.7 * g.r0, 1.5 * g.r0, R);
+      const outer = Math.sqrt(g.r0 / Math.max(R, g.r0));
+      const d = g.ripple * sig.A * wave * inner * outer;
+      ox += (dx / R) * d;
+      oy += (dy / R) * d;
+    }
+    for (const h of holes) {
+      const hx = h.x - x;
+      const hy = h.y - y;
+      const dist = Math.hypot(hx, hy);
+      if (dist < 1) continue;
+      const pull = Math.min(DENT_FRAC * h.rx * Math.exp(-dist / (2.5 * h.rx)), 0.6 * dist);
+      ox += (hx / dist) * pull;
+      oy += (hy / dist) * pull;
+    }
+    warped[0] = x + ox;
+    warped[1] = y + oy;
+    return warped;
+  }
+
+  function drawSky(t, col) {
+    const g = sky;
+    const c = g.ctx;
+    c.clearRect(0, 0, g.w, g.h);
+    const holes = holesAt(t);
+
+    // 1. Space, drawn as a grid that ripples and dips.
+    c.strokeStyle = col.grid;
+    c.lineWidth = 1;
+    c.beginPath();
+    const firstX = g.cx - Math.ceil(g.cx / g.spacing + 1) * g.spacing;  // so a line passes through the center
+    const firstY = g.cy - Math.ceil(g.cy / g.spacing + 1) * g.spacing;
+    for (let x = firstX; x <= g.w + g.spacing; x += g.spacing) {
+      for (let y = -g.spacing; y <= g.h + g.spacing; y += SAMPLE_PX) {
+        const p = warp(x, y, t, holes);
+        if (y === -g.spacing) c.moveTo(p[0], p[1]);
+        else c.lineTo(p[0], p[1]);
+      }
+    }
+    for (let y = firstY; y <= g.h + g.spacing; y += g.spacing) {
+      for (let x = -g.spacing; x <= g.w + g.spacing; x += SAMPLE_PX) {
+        const p = warp(x, y, t, holes);
+        if (x === -g.spacing) c.moveTo(p[0], p[1]);
+        else c.lineTo(p[0], p[1]);
+      }
+    }
+    c.stroke();
+
+    // 2. Flash of the crash.
+    const s = sinceLastPlay(t);
+    const FLASH_RISE = 0.06;  // s
+    const FLASH_FADE = 0.2;   // s
+    if (s > T_PEAK - FLASH_RISE && s < T_PEAK + 6 * FLASH_FADE) {
+      let glow = Math.exp(-(s - T_PEAK) / FLASH_FADE);
+      if (s < T_PEAK) glow = (s - (T_PEAK - FLASH_RISE)) / FLASH_RISE;
+      const rad = g.rb * 4.5;
+      const grad = c.createRadialGradient(g.cx, g.cy, 0, g.cx, g.cy, rad);
+      grad.addColorStop(0, col.accent);
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      c.globalAlpha = 0.55 * glow;
+      c.fillStyle = grad;
+      c.beginPath();
+      c.arc(g.cx, g.cy, rad, 0, TAU);
+      c.fill();
+      c.globalAlpha = 1;
+    }
+
+    // 3. Black holes: glowing rims first, then the black disks on top, so where
+    //    shapes overlap during the merger only the outer rim shows.
+    c.save();
+    c.shadowColor = col.accent;
+    c.shadowBlur = g.rb * 0.7;
+    c.strokeStyle = col.accent;
+    c.lineWidth = Math.max(2, g.rb * 0.09);
+    for (const h of holes) {
+      c.beginPath();
+      c.ellipse(h.x, h.y, h.rx, h.ry, h.rot, 0, TAU);
+      c.stroke();
+    }
+    c.restore();
+    c.fillStyle = col.hole;
+    for (const h of holes) {
+      c.beginPath();
+      c.ellipse(h.x, h.y, h.rx * 0.97, h.ry * 0.97, h.rot, 0, TAU);
+      c.fill();
+    }
+  }
+
+  function drawTrace(t, col) {
+    const g = trace;
+    const c = g.ctx;
+    c.clearRect(0, 0, g.w, g.h);
+    function xOf(tt) { return g.left + (tt / TRACE_END) * g.plotW; }
+
+    // Shade act 2 and number the acts above the line.
+    c.fillStyle = col.rule;
+    c.fillRect(xOf(ACT2_START), g.top, xOf(ACT3_START) - xOf(ACT2_START), g.h - g.top);
+    c.fillStyle = col.soft;
+    c.font = MONO_FONT;
+    c.textAlign = "center";
+    c.textBaseline = "top";
+    c.fillText("1", xOf(ACT2_START / 2), 2);
+    c.fillText("2", xOf((ACT2_START + ACT3_START) / 2), 2);
+    c.fillText("3", xOf((ACT3_START + TRACE_END) / 2), 2);
+
+    c.lineJoin = "round";
+    c.strokeStyle = col.wave;
+    const s = sinceLastPlay(t);
+    if (s < 0) {
+      c.globalAlpha = 0.6;
+      c.lineWidth = 1.5;
+      c.stroke(tracePath);
+      c.globalAlpha = 1;
+      return;
+    }
+    if (s >= TRACE_END) {
+      c.lineWidth = 2;
+      c.stroke(tracePath);
+      return;
+    }
+    c.globalAlpha = 0.25;
+    c.lineWidth = 1.5;
+    c.stroke(tracePath);
+    c.globalAlpha = 1;
+    const xNow = xOf(Math.max(0, s));
+    c.save();
+    c.beginPath();
+    c.rect(0, 0, xNow, g.h);
+    c.clip();
+    c.lineWidth = 2;
+    c.stroke(tracePath);
+    c.restore();
+    c.strokeStyle = col.accent;
+    c.lineWidth = 2;
+    c.beginPath();
+    c.moveTo(xNow, g.top);
+    c.lineTo(xNow, g.h);
+    c.stroke();
+  }
+
+  let shownAct = -1;
+  let shownPlaying = null;
+  function updateHeroUi(t) {
+    const s = sinceLastPlay(t);
+    const playing = s >= 0 && s < END;
+    let act = 0;
+    if (playing && s < ACT2_START) act = 1;
+    else if (playing && s < ACT3_START) act = 2;
+    else if (playing) act = 3;
+    if (act !== shownAct) {
+      actEls.forEach(function (li) { li.classList.toggle("on", Number(li.dataset.act) === act); });
+      shownAct = act;
+    }
+    if (playing !== shownPlaying) {
+      if (playing) playLabel.textContent = "Playing…";
+      else if (starts.length) playLabel.textContent = "Play it again";
+      else playLabel.textContent = "Play a black hole collision";
+      shownPlaying = playing;
+    }
+  }
+
+  const heroScene = addScene(heroEl, {
+    layout: function () {
+      const s = fitCanvas(skyCanvas);
+      const short = Math.min(s.w, s.h);
+      const r0 = ORBIT_FRAC * short;
+      sky = {
+        ctx: s.ctx, w: s.w, h: s.h, cx: s.w / 2, cy: s.h / 2,
+        r0: r0,                               // starting orbit radius, px
+        rb: r0 * A_START,                     // black hole radius: chosen so the pair just touches at the crash
+        v: SPEED_FRAC * Math.max(s.w, s.h),   // ripple speed, px/s
+        ripple: RIPPLE_FRAC * short,          // ripple displacement scale, px
+        spacing: short / GRID_CELLS,          // grid spacing, px
+      };
+      const tr = fitCanvas(traceCanvas);
+      const top = 18;  // room for the act numbers
+      trace = { ctx: tr.ctx, w: tr.w, h: tr.h, left: 6, plotW: tr.w - 12, top: top, mid: top + (tr.h - top) / 2, amp: (tr.h - top) / 2 - 4 };
+      tracePath = new Path2D();
+      for (let px = 0; px <= trace.plotW; px += 1) {
+        const c = chirp((px / trace.plotW) * TRACE_END);
+        const y = trace.mid - trace.amp * c.A * Math.cos(TAU * F0_VIS * c.cycles);
+        if (px === 0) tracePath.moveTo(trace.left + px, y);
+        else tracePath.lineTo(trace.left + px, y);
+      }
+    },
+    draw: function (t, col) {
+      drawSky(t, col);
+      drawTrace(t, col);
+      updateHeroUi(t);
+    },
+    moving: function (t) {
+      const s = sinceLastPlay(t);
+      return !REDUCED || (s >= 0 && s < END + 0.1);
+    },
+  });
+
+  // ---- Sound ----
+  const F0_AUDIO = 120;  // Hz at the start. The first collision LIGO heard started near 35 Hz; raised so phone speakers can play it.
+  const OCTAVE = 0.25;   // a little of the note an octave up, which small speakers reproduce better
+  const FADE_IN = 0.25;  // s, avoids a click at the start
+  const VOLUME = 0.55;   // peak sample ≈ VOLUME × (1 + OCTAVE) ≈ 0.69, below clipping
+  let audio = null;
+  let chirpBuffer = null;
+  let voice = null;
+
+  function buildChirp(ac) {
+    const rate = ac.sampleRate;
+    const n = Math.ceil((T_PEAK + 6 * TAU_RING) * rate);
+    const buf = ac.createBuffer(1, n, rate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) {
+      const t = i / rate;
+      const c = chirp(t);
+      const phase = TAU * F0_AUDIO * c.cycles;
+      const fade = Math.min(1, t / FADE_IN);
+      data[i] = VOLUME * fade * c.A * (Math.sin(phase) + OCTAVE * Math.sin(2 * phase));
+    }
+    return buf;
+  }
+
+  function playSound() {
+    // Safari 16.4+: play even when an iPhone's ring switch is on silent.
+    if ("audioSession" in navigator) navigator.audioSession.type = "playback";
+    if (audio === null) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audio = new AC();
+      chirpBuffer = buildChirp(audio);
+    }
+    audio.resume();
+    if (voice !== null) voice.stop();
+    voice = audio.createBufferSource();
+    voice.buffer = chirpBuffer;
+    voice.connect(audio.destination);
+    voice.start();
+  }
+
+  playBtn.addEventListener("click", function () {
+    playSound();
+    starts.push(now());
+    if (starts.length > 2) starts.shift();  // older plays have long since left the picture
+    refresh(heroScene);
+  });
+
+  // ===========================================================================
+  // Squeeze: shrink something until it becomes a black hole, then show that black hole
+  // to scale beside something familiar.
+  // Schwarzschild radius r_s = 2GM/c², with 2G/c² = 1.485e-27 m/kg:
+  //   person 70 kg → 1.0e-25 m;  Everest ~1.6e14 kg (estimates vary by ~2×) → 2.4e-13 m;
+  //   Moon 7.342e22 kg → 0.109 mm;  Earth 5.972e24 kg → 8.87 mm;  Sun 1.989e30 kg → 2.95 km.
+  // Reference sizes (m): proton 1.7e-15 wide (charge radius 0.84 fm); uranium nucleus ~1.5e-14
+  // wide (radius ≈ 1.2 fm × 238^(1/3)); human hair ~8e-5 thick; US dime 0.01791 (Earth's
+  // black hole, 0.01774 across, is within 1% of it);
+  // Manhattan 21,600 long and up to 3,700 wide (outline below is a simplified map trace).
+  // ===========================================================================
+  const SQUEEZE = {
+    you: {
+      shape: "person", rs: 1.04e-25, rLabel: "too small to see",
+      ref: { kind: "proton", size: 1.7e-15, name: "a proton", note: "" },
+      result: "Far smaller than a proton",
+      detail: "Squeezed that small, you’d be ten billion times smaller than a proton, one of the specks inside every atom.",
+    },
+    everest: {
+      shape: "mountain", rs: 2.38e-13, rLabel: "31 cores wide",
+      ref: { kind: "nucleus", size: 1.5e-14, name: "an atom’s core", note: "(the tiny dot)" },
+      result: "Smaller than an atom",
+      detail: "All of Mount Everest, squeezed so small that 31 atomic cores (nuclei) side by side would span it.",
+    },
+    moon: {
+      shape: "moon", rs: 1.09e-4, rLabel: "about 3 hairs wide",
+      ref: { kind: "hair", size: 8e-5, name: "a human hair", note: "one strand" },
+      result: "A grain of fine sand",
+      detail: "All of the Moon, squeezed to about three hairs wide.",
+    },
+    earth: {
+      shape: "earth", rs: 8.87e-3, rLabel: "0.7 inches across",
+      ref: { kind: "coin", size: 0.01791, name: "a dime", note: "same size" },
+      result: "About a dime",
+      detail: "All of Earth, squeezed to 0.7 inches across, almost exactly a dime.",
+    },
+    sun: {
+      shape: "sun", rs: 2950, rLabel: "3.7 miles across",
+      ref: { kind: "manhattan", size: 21600, name: "Manhattan", note: "13.4 miles long" },
+      result: "Wider than Manhattan",
+      detail: "All of the Sun, squeezed to 3.7 miles across, wider than Manhattan.",
+    },
+  };
+  const SQUEEZE_DUR = 2.2;            // s for the whole animation
+  const SQ_COMPARE = [0.75, 1.0];     // fraction of SQUEEZE_DUR over which the to-scale comparison fades in
+  let squeezeKey = "earth";
+  let squeezeT0 = -Infinity;  // −∞ = show the finished state
+  // Keep animating until a frame at the very end has been drawn. Stopping on a timer instead
+  // can leave the picture frozen mid-fade when the browser skips frames.
+  let squeezeSettled = true;
+  let sq = null;
+
+  // Simple flat drawings of each object, centered on (x, y), about R in radius.
+  function drawThing(c, shape, x, y, R, col) {
+    if (shape === "person") {
+      c.fillStyle = col.soft;
+      c.beginPath();
+      c.arc(x, y - 0.68 * R, 0.2 * R, 0, TAU);
+      c.fill();
+      c.beginPath();
+      c.roundRect(x - 0.3 * R, y - 0.42 * R, 0.6 * R, 0.72 * R, 0.14 * R);
+      c.fill();
+      c.fillRect(x - 0.26 * R, y + 0.2 * R, 0.2 * R, 0.8 * R);
+      c.fillRect(x + 0.06 * R, y + 0.2 * R, 0.2 * R, 0.8 * R);
+      return;
+    }
+    if (shape === "mountain") {
+      c.fillStyle = col.rock;
+      c.beginPath();
+      c.moveTo(x - R, y + 0.75 * R);
+      c.lineTo(x, y - 0.85 * R);
+      c.lineTo(x + R, y + 0.75 * R);
+      c.closePath();
+      c.fill();
+      c.fillStyle = col.snow;
+      c.beginPath();
+      c.moveTo(x, y - 0.85 * R);
+      c.lineTo(x + 0.3 * R, y - 0.37 * R);
+      c.lineTo(x + 0.15 * R, y - 0.3 * R);
+      c.lineTo(x, y - 0.4 * R);
+      c.lineTo(x - 0.15 * R, y - 0.3 * R);
+      c.lineTo(x - 0.3 * R, y - 0.37 * R);
+      c.closePath();
+      c.fill();
+      return;
+    }
+    // Round things: moon, earth, sun.
+    c.save();
+    if (shape === "sun") {
+      c.shadowColor = col.sun;
+      c.shadowBlur = 0.35 * R;
+      c.fillStyle = col.sun;
+    } else if (shape === "earth") {
+      c.fillStyle = col.earth;
+    } else {
+      c.fillStyle = col.moon;
+    }
+    c.beginPath();
+    c.arc(x, y, R, 0, TAU);
+    c.fill();
+    c.restore();
+    if (shape === "earth") {
+      c.save();
+      c.beginPath();
+      c.arc(x, y, R, 0, TAU);
+      c.clip();
+      c.fillStyle = col.land;
+      c.beginPath();
+      c.ellipse(x - 0.3 * R, y - 0.25 * R, 0.38 * R, 0.24 * R, -0.5, 0, TAU);
+      c.fill();
+      c.beginPath();
+      c.ellipse(x + 0.35 * R, y + 0.32 * R, 0.3 * R, 0.42 * R, 0.4, 0, TAU);
+      c.fill();
+      c.restore();
+    }
+    if (shape === "moon") {
+      c.save();
+      c.globalAlpha = c.globalAlpha * 0.35;
+      c.fillStyle = col.rock;
+      c.beginPath();
+      c.arc(x - 0.35 * R, y - 0.2 * R, 0.18 * R, 0, TAU);
+      c.arc(x + 0.25 * R, y + 0.3 * R, 0.24 * R, 0, TAU);
+      c.moveTo(x + 0.4 * R, y - 0.35 * R);
+      c.arc(x + 0.3 * R, y - 0.35 * R, 0.1 * R, 0, TAU);
+      c.fill();
+      c.restore();
+    }
+  }
+
+  // A US dime, face up, inside radius R (px) around (x, y): polished field, raised rim, reeded
+  // edge, Franklin D. Roosevelt's left-facing profile (the dime's portrait since 1946), LIBERTY
+  // up the left rim, IN GOD WE TRUST under the chin and the date at lower right. The portrait
+  // is hand-drawn after the coin's layout, not a copy of the engraving. Shapes are in units of
+  // R (x right, y down) and everything stays inside the coin's true outline, so the size
+  // comparison is unaffected.
+  function drawDime(c, x, y, R, col, fade) {
+    const px = 1 / R;  // one CSS pixel, in units of R
+    c.save();
+    c.translate(x, y);
+    c.scale(R, R);
+    c.globalAlpha = fade;
+
+    // Field: polished metal, brightest toward the upper left.
+    const field = c.createRadialGradient(-0.35, -0.4, 0.05, 0, 0, 1);
+    field.addColorStop(0, col.snow);
+    field.addColorStop(0.55, col.moon);
+    field.addColorStop(1, col.rock);
+    c.fillStyle = field;
+    c.beginPath();
+    c.arc(0, 0, 1, 0, TAU);
+    c.fill();
+
+    // Raised rim: dark inner edge all round, catching the light on the upper left.
+    c.lineWidth = 1.2 * px;
+    c.strokeStyle = col.rock;
+    c.beginPath();
+    c.arc(0, 0, 0.87, 0, TAU);
+    c.stroke();
+    c.strokeStyle = col.snow;
+    c.beginPath();
+    c.arc(0, 0, 0.885, Math.PI * 0.75, Math.PI * 1.75);
+    c.stroke();
+
+    // Reeded edge. A real dime has 118 reeds; fewer read better at this size.
+    const REEDS = 90;
+    c.strokeStyle = col.rock;
+    c.lineWidth = px;
+    c.beginPath();
+    for (let k = 0; k < REEDS; k++) {
+      const a = (TAU * k) / REEDS;
+      c.moveTo(Math.cos(a), Math.sin(a));
+      c.lineTo(0.94 * Math.cos(a), 0.94 * Math.sin(a));
+    }
+    c.stroke();
+
+    // The head's outline: up the throat, chin, lips, nose, brow and forehead, over the crown,
+    // down the back of the head and neck, then the curved cut at the base of the neck.
+    function head() {
+      c.beginPath();
+      c.moveTo(-0.16, 0.66);
+      c.bezierCurveTo(-0.13, 0.60, -0.12, 0.55, -0.14, 0.50);       // throat
+      c.bezierCurveTo(-0.17, 0.45, -0.24, 0.42, -0.30, 0.40);       // under the chin
+      c.bezierCurveTo(-0.35, 0.39, -0.39, 0.35, -0.385, 0.29);      // chin
+      c.bezierCurveTo(-0.38, 0.26, -0.375, 0.245, -0.385, 0.235);   // below the lower lip
+      c.bezierCurveTo(-0.405, 0.225, -0.405, 0.205, -0.38, 0.195);  // lower lip
+      c.lineTo(-0.385, 0.185);                                      // corner of the mouth
+      c.bezierCurveTo(-0.41, 0.175, -0.41, 0.15, -0.395, 0.135);    // upper lip
+      c.bezierCurveTo(-0.39, 0.125, -0.40, 0.115, -0.415, 0.11);    // under the nose
+      c.bezierCurveTo(-0.46, 0.105, -0.50, 0.085, -0.495, 0.06);    // tip of the nose
+      c.bezierCurveTo(-0.47, 0.01, -0.45, -0.04, -0.435, -0.09);    // bridge of the nose
+      c.bezierCurveTo(-0.42, -0.12, -0.405, -0.13, -0.405, -0.145); // dip between the eyes
+      c.bezierCurveTo(-0.42, -0.17, -0.425, -0.20, -0.415, -0.23);  // brow
+      c.bezierCurveTo(-0.405, -0.33, -0.39, -0.42, -0.33, -0.50);   // forehead
+      c.bezierCurveTo(-0.22, -0.64, 0.05, -0.72, 0.28, -0.64);      // over the top of the head
+      c.bezierCurveTo(0.52, -0.55, 0.64, -0.30, 0.60, -0.08);       // back of the head
+      c.bezierCurveTo(0.58, 0.10, 0.50, 0.22, 0.44, 0.32);          // base of the skull
+      c.bezierCurveTo(0.42, 0.42, 0.44, 0.52, 0.47, 0.60);          // back of the neck
+      c.bezierCurveTo(0.30, 0.71, 0.04, 0.72, -0.16, 0.66);         // the cut
+      c.closePath();
+    }
+    // Relief: a shadow to the lower right and a highlight to the upper left, then the head.
+    const RELIEF = 0.9 * px;
+    c.save();
+    c.translate(RELIEF, RELIEF);
+    head();
+    c.fillStyle = col.rock;
+    c.globalAlpha = 0.8 * fade;
+    c.fill();
+    c.restore();
+    c.save();
+    c.translate(-RELIEF, -RELIEF);
+    head();
+    c.fillStyle = col.snow;
+    c.globalAlpha = 0.9 * fade;
+    c.fill();
+    c.restore();
+    head();
+    const skin = c.createLinearGradient(-0.5, -0.6, 0.6, 0.6);
+    skin.addColorStop(0, col.snow);
+    skin.addColorStop(1, col.moon);
+    c.fillStyle = skin;
+    c.globalAlpha = fade;
+    c.fill();
+
+    // Hair: a slightly darker mass behind the hairline and over the ear, clipped to the head.
+    c.save();
+    head();
+    c.clip();
+    c.beginPath();
+    c.moveTo(-0.33, -0.50);
+    c.bezierCurveTo(-0.20, -0.42, -0.02, -0.34, 0.06, -0.20);  // hairline over the temple
+    c.lineTo(0.08, -0.10);                                     // sideburn
+    c.bezierCurveTo(0.10, -0.20, 0.27, -0.18, 0.29, -0.02);    // over the top of the ear
+    c.bezierCurveTo(0.31, 0.08, 0.40, 0.16, 0.50, 0.20);       // behind the ear to the nape
+    c.lineTo(0.9, 0.2);
+    c.lineTo(0.9, -0.9);
+    c.lineTo(-0.6, -0.9);
+    c.closePath();
+    c.fillStyle = col.moon;
+    c.globalAlpha = 0.6 * fade;
+    c.fill();
+    c.restore();
+
+    // Engraved detail lines.
+    c.strokeStyle = col.rock;
+    c.lineWidth = 0.9 * px;
+    c.lineCap = "round";
+    c.globalAlpha = 0.85 * fade;
+    c.beginPath();
+    // Receding hairline over the temple to a short sideburn, and hair combed straight back.
+    c.moveTo(-0.33, -0.50);
+    c.bezierCurveTo(-0.20, -0.42, -0.02, -0.34, 0.06, -0.20);
+    c.lineTo(0.08, -0.10);
+    c.moveTo(-0.26, -0.56);
+    c.bezierCurveTo(-0.05, -0.60, 0.25, -0.55, 0.48, -0.40);
+    c.moveTo(-0.18, -0.48);
+    c.bezierCurveTo(0.02, -0.50, 0.30, -0.42, 0.55, -0.24);
+    c.moveTo(-0.08, -0.40);
+    c.bezierCurveTo(0.10, -0.40, 0.36, -0.30, 0.57, -0.08);
+    c.moveTo(0.02, -0.30);
+    c.bezierCurveTo(0.20, -0.28, 0.40, -0.16, 0.52, 0.10);
+    // Ear: outer rim and the inner fold.
+    c.moveTo(0.10, -0.08);
+    c.bezierCurveTo(0.12, -0.16, 0.26, -0.16, 0.27, -0.04);
+    c.bezierCurveTo(0.28, 0.06, 0.22, 0.12, 0.20, 0.18);
+    c.bezierCurveTo(0.18, 0.22, 0.12, 0.20, 0.12, 0.14);
+    c.moveTo(0.15, -0.04);
+    c.bezierCurveTo(0.20, -0.08, 0.23, 0.0, 0.19, 0.06);
+    // Eyebrow and eyelids.
+    c.moveTo(-0.355, -0.17);
+    c.quadraticCurveTo(-0.30, -0.20, -0.24, -0.17);
+    c.moveTo(-0.345, -0.085);
+    c.quadraticCurveTo(-0.31, -0.115, -0.275, -0.09);
+    c.moveTo(-0.34, -0.08);
+    c.quadraticCurveTo(-0.31, -0.065, -0.28, -0.085);
+    // Nostril, the line from nose to mouth, the mouth.
+    c.moveTo(-0.44, 0.08);
+    c.quadraticCurveTo(-0.42, 0.06, -0.40, 0.08);
+    c.moveTo(-0.36, 0.06);
+    c.quadraticCurveTo(-0.33, 0.13, -0.34, 0.21);
+    c.moveTo(-0.385, 0.19);
+    c.lineTo(-0.35, 0.19);
+    // Jaw line from below the ear to the chin, and the long neck muscle.
+    c.moveTo(0.13, 0.20);
+    c.bezierCurveTo(0.02, 0.32, -0.12, 0.38, -0.24, 0.39);
+    c.moveTo(0.22, 0.22);
+    c.bezierCurveTo(0.20, 0.36, 0.14, 0.50, 0.10, 0.62);
+    c.stroke();
+    c.fillStyle = col.rock;
+    c.beginPath();
+    c.arc(-0.31, -0.088, 0.013, 0, TAU);  // pupil
+    c.fill();
+    c.restore();
+
+    // Lettering, in raised capitals, drawn in pixels so small text stays crisp.
+    c.save();
+    c.fillStyle = col.rock;
+    c.globalAlpha = 0.95 * fade;
+    c.textAlign = "center";
+    c.textBaseline = "alphabetic";
+    // LIBERTY up the left rim: letters stand on a circle with their tops pointing outward,
+    // reading clockwise. With y down, clockwise at angle θ points along θ + 90°.
+    const word = "LIBERTY";
+    const textR = 0.73 * R;
+    c.font = "700 " + (0.15 * R).toFixed(1) + 'px "Bricolage Grotesque", system-ui, sans-serif';
+    const widths = Array.from(word, function (ch) { return c.measureText(ch).width * 1.15; });
+    const span = widths.reduce(function (s, w) { return s + w; }, 0) / textR;  // radians covered
+    let theta = Math.PI * 1.08 - span / 2;
+    for (let i = 0; i < word.length; i++) {
+      const half = widths[i] / 2 / textR;
+      theta += half;
+      c.save();
+      c.translate(x + textR * Math.cos(theta), y + textR * Math.sin(theta));
+      c.rotate(theta + Math.PI / 2);
+      c.fillText(word[i], 0, 0);
+      c.restore();
+      theta += half;
+    }
+    // IN GOD / WE TRUST in two small lines under the chin, and the date behind the neck.
+    c.font = "700 " + (0.08 * R).toFixed(1) + 'px "Bricolage Grotesque", system-ui, sans-serif';
+    c.fillText("IN GOD", x - 0.40 * R, y + 0.50 * R);
+    c.fillText("WE TRUST", x - 0.40 * R, y + 0.59 * R);
+    c.font = "700 " + (0.09 * R).toFixed(1) + 'px "Bricolage Grotesque", system-ui, sans-serif';
+    c.fillText("2026", x + 0.62 * R, y + 0.45 * R);
+    c.restore();
+  }
+
+  // The black hole beside its reference object, both at one scale (px per metre), labeled.
+  // Drawn at the current globalAlpha, so it can fade in.
+  function drawComparison(c, item, col) {
+    const w = sq.w;
+    const h = sq.h;
+    const fade = c.globalAlpha;
+    const cy = 66;                                  // px, centre line of both objects
+    const target = Math.min(90, 0.53 * h);          // px for the larger of the two
+    const ref = item.ref;
+    const scale = target / Math.max(2 * item.rs, ref.size);  // px per metre
+    const bx = 0.27 * w;                             // black hole's centre
+    const rx = 0.75 * w;                            // reference object's centre
+    const refPx = ref.size * scale;
+
+    if (ref.kind === "coin") {
+      drawDime(c, rx, cy, refPx / 2, col, fade);
+    } else if (ref.kind === "hair") {
+      // A strand drawn at its true thickness; its length is just "long".
+      c.fillStyle = col.soft;
+      c.globalAlpha = 0.85 * fade;
+      c.beginPath();
+      c.roundRect(rx - refPx / 2, cy - 52, refPx, 104, refPx / 2);
+      c.fill();
+    } else if (ref.kind === "manhattan") {
+      // Simplified outline of Manhattan in km: x across (east +), y along the island from the
+      // Battery (0) to Inwood (21.6). Widest, 3.7 km, around the Lower East Side.
+      const ISLAND = [
+        [0.0, 0.0], [-0.6, 0.8], [-0.9, 2.5], [-1.1, 5.0], [-1.1, 8.0], [-1.0, 11.0], [-0.9, 14.0],
+        [-0.8, 17.0], [-0.7, 19.5], [-0.4, 21.6], [0.3, 21.4], [0.6, 20.0], [0.7, 18.5], [1.2, 16.0],
+        [1.3, 13.0], [1.4, 10.0], [1.6, 7.0], [2.6, 4.5], [2.3, 3.0], [1.2, 1.2], [0.5, 0.2],
+      ];
+      const TILT = (29 * Math.PI) / 180;     // the island runs 29° east of true north; north is up here
+      const pxPerKm = 1000 * scale;
+      c.fillStyle = col.land;
+      c.globalAlpha = 0.85 * fade;
+      c.beginPath();
+      ISLAND.forEach(function (p, i) {
+        const along = p[1] - 10.8;            // km from the middle of the island
+        const across = p[0] - 0.75;           // km from its centre line
+        const X = rx + (along * Math.sin(TILT) + across * Math.cos(TILT)) * pxPerKm;
+        const Y = cy + (-along * Math.cos(TILT) + across * Math.sin(TILT)) * pxPerKm;
+        if (i === 0) c.moveTo(X, Y);
+        else c.lineTo(X, Y);
+      });
+      c.closePath();
+      c.fill();
+      c.globalAlpha = fade;
+      c.strokeStyle = col.land;
+      c.lineWidth = 1;
+      c.stroke();
+    } else {
+      // A proton or a nucleus: a round ball at its true size.
+      c.fillStyle = col.accent;
+      c.beginPath();
+      c.arc(rx, cy, refPx / 2, 0, TAU);
+      if (refPx >= 12) {
+        c.globalAlpha = 0.45 * fade;
+        c.fill();
+        c.globalAlpha = fade;
+        c.strokeStyle = col.accent;
+        c.lineWidth = 1.5;
+        c.stroke();
+      } else {
+        // Only a few pixels: solid fill and no outline (an outline would make it look bigger).
+        // Nothing else is drawn near it, since any line or ring would read as part of it;
+        // its label says "the tiny dot" instead.
+        c.globalAlpha = fade;
+        c.fill();
+      }
+    }
+
+    // The black hole, with its radius marked from centre to edge. Too small to draw: circle where it is.
+    const r = item.rs * scale;
+    c.globalAlpha = fade;
+    if (r >= 1.5) {
+      c.save();
+      c.shadowColor = col.accent;
+      c.shadowBlur = 6;
+      c.fillStyle = col.hole;
+      c.beginPath();
+      c.arc(bx, cy, r, 0, TAU);
+      c.fill();
+      c.strokeStyle = col.accent;
+      c.lineWidth = 2;
+      c.stroke();
+      c.restore();
+      c.strokeStyle = col.accent;
+      c.lineWidth = 1.5;
+      c.beginPath();
+      c.moveTo(bx, cy);
+      c.lineTo(bx + r, cy);
+      c.moveTo(bx, cy - 3);
+      c.lineTo(bx, cy + 3);
+      c.stroke();
+    } else {
+      // Far below one pixel at this scale, so nothing is drawn at its size: an arrow points to
+      // where it is, and its label says it is too small to see.
+      c.strokeStyle = col.accent;
+      c.lineWidth = 1.5;
+      c.beginPath();
+      c.moveTo(bx, cy);
+      c.lineTo(bx, h - 44);
+      c.moveTo(bx - 4, cy + 5);
+      c.lineTo(bx, cy);
+      c.lineTo(bx + 4, cy + 5);
+      c.stroke();
+    }
+
+    // A tiny reference is hard to judge against a big disk (the eye compares areas, here
+    // ~1/1000), so count it out: references side by side, at the same scale, spanning the
+    // black hole's diameter just below it. Alternating colors keep neighbours apart.
+    const across = (2 * r) / refPx;  // how many references fit across the black hole
+    const showRow = refPx < 12 && r >= 1.5;
+    if (showRow) {
+      const rowY = cy + r + 7;
+      for (let i = 0; i < Math.floor(across); i++) {
+        c.fillStyle = i % 2 === 0 ? col.accent : col.wave;
+        c.beginPath();
+        c.arc(bx - r + refPx * (i + 0.5), rowY, refPx / 2, 0, TAU);
+        c.fill();
+      }
+      // Faint guides down from the black hole's widest points, to show the row spans it.
+      c.strokeStyle = col.soft;
+      c.globalAlpha = 0.5 * fade;
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(bx - r, cy);
+      c.lineTo(bx - r, rowY + 3);
+      c.moveTo(bx + r, cy);
+      c.lineTo(bx + r, rowY + 3);
+      c.stroke();
+      c.globalAlpha = fade;
+    }
+
+    c.font = MONO_FONT;
+    c.textAlign = "center";
+    c.textBaseline = "top";
+    c.fillStyle = col.ink;
+    c.fillText("black hole", bx, h - 40);
+    c.fillText(ref.name, rx, h - 40);
+    c.fillStyle = col.soft;
+    c.fillText(item.rLabel, bx, h - 26);
+    c.fillText(ref.note, rx, h - 26);
+    c.textAlign = "left";
+    c.fillStyle = col.ink;
+    c.fillText("side by side, to scale", 6, 4);
+    c.globalAlpha = 1;
+  }
+
+  const squeezeEl = document.getElementById("squeeze");
+  const squeezeCanvas = document.getElementById("squeeze-canvas");
+  const squeezeResult = document.getElementById("squeeze-result");
+  const squeezeDetail = document.getElementById("squeeze-detail");
+  const squeezeScene = addScene(squeezeEl, {
+    layout: function () { sq = fitCanvas(squeezeCanvas); },
+    draw: function (t, col) {
+      const c = sq.ctx;
+      c.clearRect(0, 0, sq.w, sq.h);
+      const cx = sq.w / 2;
+      const cy = sq.h / 2;
+      const R = 0.4 * Math.min(sq.w, sq.h);
+      const item = SQUEEZE[squeezeKey];
+      const u = clamp01((t - squeezeT0) / SQUEEZE_DUR);
+      if (u >= 1) squeezeSettled = true;
+      const compare = smoothstep(SQ_COMPARE[0], SQ_COMPARE[1], u);  // 0 → 1 as the to-scale view fades in
+
+      // The squeeze itself, fading out as the comparison fades in.
+      // 0–10%: hold. 10–55%: shrink (speeding up). 55–68%: the black hole appears.
+      if (compare < 1) {
+        const keep = 1 - compare;
+        // Faint outline of the original size, for comparison.
+        c.globalAlpha = 0.16 * keep;
+        drawThing(c, item.shape, cx, cy, R, col);
+        const shrink = clamp01((u - 0.1) / 0.45);
+        if (u < 0.55) {
+          c.globalAlpha = keep;
+          const scale = 1 - 0.98 * shrink * shrink * shrink;
+          drawThing(c, item.shape, cx, cy, R * scale, col);
+        }
+        const appear = clamp01((u - 0.55) / 0.13);
+        if (appear > 0) {
+          c.globalAlpha = appear * keep;
+          drawDot(c, cx, cy, 7, col);
+        }
+        c.globalAlpha = keep;
+        c.fillStyle = col.soft;
+        c.font = '500 10px "IBM Plex Mono", ui-monospace, monospace';
+        c.textAlign = "right";
+        c.textBaseline = "bottom";
+        c.fillText("dot not to scale", sq.w - 6, sq.h - 4);
+        c.globalAlpha = 1;
+      }
+      if (compare > 0) {
+        c.globalAlpha = compare;
+        drawComparison(c, item, col);
+      }
+    },
+    moving: function () { return !squeezeSettled; },
+  });
+  wireSeg(document.getElementById("squeeze-seg"), function (key) {
+    squeezeKey = key;
+    squeezeT0 = REDUCED ? -Infinity : now();
+    squeezeSettled = REDUCED;
+    squeezeResult.textContent = SQUEEZE[key].result;
+    squeezeDetail.textContent = SQUEEZE[key].detail;
+    refresh(squeezeScene);
+  });
+
+  // ===========================================================================
+  // Trampoline: a stretchy sheet seen at an angle, dented by whatever sits on it.
+  // Dip depth at distance r from the middle: d(r) = depth · (width / √(r² + width²))^power.
+  // power 2 makes a soft bowl (planets, stars); power 1 a long, steep funnel (black hole).
+  // depth is in fractions of the picture's height; width and r are in sheet half-widths.
+  // ===========================================================================
+  const BEND = {
+    none:  { depth: 0,    width: 0.3,  power: 2, ball: "none",  ballR: 0,     text: "Flat. Nothing is bending it." },
+    earth: { depth: 0.09, width: 0.28, power: 2, ball: "earth", ballR: 0.035, text: "A gentle dip, enough to keep the Moon circling Earth." },
+    sun:   { depth: 0.26, width: 0.3,  power: 2, ball: "sun",   ballR: 0.06,  text: "A deep dip, enough to keep every planet circling the Sun." },
+    hole:  { depth: 0.9,  width: 0.06, power: 1, ball: "hole",  ballR: 0.03,  text: "So steep that nothing, not even light, climbs back out." },
+  };
+  const BEND_DUR = 0.7;     // s to morph from one dip to the next
+  const SHEET_LINES = 16;   // grid lines each way
+  const SHEET_STEPS = 48;   // points along each line
+  let bendTo = BEND.sun;
+  let bendFrom = { depth: BEND.sun.depth, width: BEND.sun.width, power: BEND.sun.power };
+  let bendNow = { depth: BEND.sun.depth, width: BEND.sun.width, power: BEND.sun.power };
+  let bendT0 = -Infinity;
+  let bendSettled = true;   // as squeezeSettled: animate until the end frame is drawn
+  let bd = null;
+
+  const bendEl = document.getElementById("bend");
+  const bendCanvas = document.getElementById("bend-canvas");
+  const bendReadout = document.getElementById("bend-readout");
+  const bendScene = addScene(bendEl, {
+    layout: function () { bd = fitCanvas(bendCanvas); },
+    draw: function (t, col) {
+      const c = bd.ctx;
+      const w = bd.w;
+      const h = bd.h;
+      c.clearRect(0, 0, w, h);
+      const uBend = clamp01((t - bendT0) / BEND_DUR);
+      if (uBend >= 1) bendSettled = true;
+      const e = easeInOut(uBend);
+      const depth = lerp(bendFrom.depth, bendTo.depth, e);
+      const width = lerp(bendFrom.width, bendTo.width, e);
+      const power = lerp(bendFrom.power, bendTo.power, e);
+      bendNow = { depth: depth, width: width, power: power };
+
+      // Sheet point (x, z), each from −1 to 1, to the screen. z = −1 is the far edge (top), z = 1 the near edge (bottom).
+      function project(x, z) {
+        const q = (z + 1) / 2;
+        const r = Math.hypot(x, z);
+        const dip = depth * Math.pow(width / Math.hypot(r, width), power);
+        return [w / 2 + x * w * (0.3 + 0.16 * q), h * (0.16 + 0.36 * q) + dip * h];
+      }
+      c.strokeStyle = col.soft;
+      c.globalAlpha = 0.55;
+      c.lineWidth = 1;
+      c.beginPath();
+      for (let i = 0; i <= SHEET_LINES; i++) {
+        const a = -1 + (2 * i) / SHEET_LINES;
+        for (let j = 0; j <= SHEET_STEPS; j++) {
+          const b = -1 + (2 * j) / SHEET_STEPS;
+          const p = project(b, a);  // line running left–right
+          if (j === 0) c.moveTo(p[0], p[1]);
+          else c.lineTo(p[0], p[1]);
+        }
+        for (let j = 0; j <= SHEET_STEPS; j++) {
+          const b = -1 + (2 * j) / SHEET_STEPS;
+          const p = project(a, b);  // line running front–back
+          if (j === 0) c.moveTo(p[0], p[1]);
+          else c.lineTo(p[0], p[1]);
+        }
+      }
+      c.stroke();
+      c.globalAlpha = 1;
+
+      // The object sitting at the bottom of the dip (kept inside the picture for the black hole's deep funnel).
+      if (bendTo.ball === "none") return;
+      const bottom = project(0, 0);
+      const ballR = Math.max(5, bendTo.ballR * w);
+      const by = Math.min(bottom[1] - ballR, h - ballR - 4);
+      if (bendTo.ball === "hole") drawDot(c, w / 2, by, ballR, col);
+      else drawThing(c, bendTo.ball, w / 2, by, ballR, col);
+    },
+    moving: function () { return !bendSettled; },
+  });
+  wireSeg(document.getElementById("bend-seg"), function (key) {
+    bendFrom = { depth: bendNow.depth, width: bendNow.width, power: bendNow.power };
+    bendTo = BEND[key];
+    bendT0 = REDUCED ? -Infinity : now();
+    bendSettled = REDUCED;
+    bendReadout.textContent = BEND[key].text;
+    refresh(bendScene);
+  });
+
+  // ===========================================================================
+  // The first detection, GW150914, from LIGO's public data (GWOSC 32 s, 4 kHz files for H1
+  // and L1, and the GWOSC numerical-relativity template), prepared offline with
+  // gw150914_prep.py following the GWOSC GW150914 tutorial: each detector's strain whitened
+  // by its own noise spectrum (Welch, 4 s segments) and band-passed 35-350 Hz (4th-order
+  // Butterworth, zero phase); Livingston shifted by 7 ms and sign-flipped to line up with
+  // Hanford; the template whitened with Hanford's spectrum, band-passed, aligned by
+  // cross-correlation (2.2 ms) and fitted in amplitude. All three are divided by the
+  // template's peak. The audio is Hanford's data with every frequency raised 400 Hz.
+  // ===========================================================================
+  // GW150914, prepared by gw150914_prep.py from the GWOSC files (see that script's notes).
+  // t: s from GPS 1126259462.422; h1, l1, nr: whitened 35-350 Hz strain / template peak.
+  const GW_T = [-0.1698, -0.1693, -0.1688, -0.1683, -0.1678, -0.1674, -0.1669, -0.1664, -0.1659, -0.1654, -0.1649, -0.1644, -0.1639, -0.1635, -0.163, -0.1625, -0.162, -0.1615, -0.161, -0.1605, -0.16, -0.1595, -0.1591, -0.1586, -0.1581, -0.1576, -0.1571, -0.1566, -0.1561, -0.1556, -0.1552, -0.1547, -0.1542, -0.1537, -0.1532, -0.1527, -0.1522, -0.1517, -0.1512, -0.1508, -0.1503, -0.1498, -0.1493, -0.1488, -0.1483, -0.1478, -0.1473, -0.1469, -0.1464, -0.1459, -0.1454, -0.1449, -0.1444, -0.1439, -0.1434, -0.1429, -0.1425, -0.142, -0.1415, -0.141, -0.1405, -0.14, -0.1395, -0.139, -0.1386, -0.1381, -0.1376, -0.1371, -0.1366, -0.1361, -0.1356, -0.1351, -0.1346, -0.1342, -0.1337, -0.1332, -0.1327, -0.1322, -0.1317, -0.1312, -0.1307, -0.1303, -0.1298, -0.1293, -0.1288, -0.1283, -0.1278, -0.1273, -0.1268, -0.1263, -0.1259, -0.1254, -0.1249, -0.1244, -0.1239, -0.1234, -0.1229, -0.1224, -0.122, -0.1215, -0.121, -0.1205, -0.12, -0.1195, -0.119, -0.1185, -0.118, -0.1176, -0.1171, -0.1166, -0.1161, -0.1156, -0.1151, -0.1146, -0.1141, -0.1137, -0.1132, -0.1127, -0.1122, -0.1117, -0.1112, -0.1107, -0.1102, -0.1097, -0.1093, -0.1088, -0.1083, -0.1078, -0.1073, -0.1068, -0.1063, -0.1058, -0.1053, -0.1049, -0.1044, -0.1039, -0.1034, -0.1029, -0.1024, -0.1019, -0.1014, -0.101, -0.1005, -0.1, -0.0995, -0.099, -0.0985, -0.098, -0.0975, -0.097, -0.0966, -0.0961, -0.0956, -0.0951, -0.0946, -0.0941, -0.0936, -0.0931, -0.0927, -0.0922, -0.0917, -0.0912, -0.0907, -0.0902, -0.0897, -0.0892, -0.0887, -0.0883, -0.0878, -0.0873, -0.0868, -0.0863, -0.0858, -0.0853, -0.0848, -0.0844, -0.0839, -0.0834, -0.0829, -0.0824, -0.0819, -0.0814, -0.0809, -0.0804, -0.08, -0.0795, -0.079, -0.0785, -0.078, -0.0775, -0.077, -0.0765, -0.0761, -0.0756, -0.0751, -0.0746, -0.0741, -0.0736, -0.0731, -0.0726, -0.0721, -0.0717, -0.0712, -0.0707, -0.0702, -0.0697, -0.0692, -0.0687, -0.0682, -0.0678, -0.0673, -0.0668, -0.0663, -0.0658, -0.0653, -0.0648, -0.0643, -0.0638, -0.0634, -0.0629, -0.0624, -0.0619, -0.0614, -0.0609, -0.0604, -0.0599, -0.0595, -0.059, -0.0585, -0.058, -0.0575, -0.057, -0.0565, -0.056, -0.0555, -0.0551, -0.0546, -0.0541, -0.0536, -0.0531, -0.0526, -0.0521, -0.0516, -0.0512, -0.0507, -0.0502, -0.0497, -0.0492, -0.0487, -0.0482, -0.0477, -0.0472, -0.0468, -0.0463, -0.0458, -0.0453, -0.0448, -0.0443, -0.0438, -0.0433, -0.0428, -0.0424, -0.0419, -0.0414, -0.0409, -0.0404, -0.0399, -0.0394, -0.0389, -0.0385, -0.038, -0.0375, -0.037, -0.0365, -0.036, -0.0355, -0.035, -0.0345, -0.0341, -0.0336, -0.0331, -0.0326, -0.0321, -0.0316, -0.0311, -0.0306, -0.0302, -0.0297, -0.0292, -0.0287, -0.0282, -0.0277, -0.0272, -0.0267, -0.0262, -0.0258, -0.0253, -0.0248, -0.0243, -0.0238, -0.0233, -0.0228, -0.0223, -0.0219, -0.0214, -0.0209, -0.0204, -0.0199, -0.0194, -0.0189, -0.0184, -0.0179, -0.0175, -0.017, -0.0165, -0.016, -0.0155, -0.015, -0.0145, -0.014, -0.0136, -0.0131, -0.0126, -0.0121, -0.0116, -0.0111, -0.0106, -0.0101, -0.0096, -0.0092, -0.0087, -0.0082, -0.0077, -0.0072, -0.0067, -0.0062, -0.0057, -0.0053, -0.0048, -0.0043, -0.0038, -0.0033, -0.0028, -0.0023, -0.0018, -0.0013, -0.0009, -0.0004, 0.0001, 0.0006, 0.0011, 0.0016, 0.0021, 0.0026, 0.003, 0.0035, 0.004, 0.0045, 0.005, 0.0055, 0.006, 0.0065, 0.007, 0.0074, 0.0079, 0.0084, 0.0089, 0.0094, 0.0099, 0.0104, 0.0109, 0.0113, 0.0118, 0.0123, 0.0128, 0.0133, 0.0138, 0.0143, 0.0148, 0.0153, 0.0157, 0.0162, 0.0167, 0.0172, 0.0177, 0.0182, 0.0187, 0.0192, 0.0197, 0.0201, 0.0206, 0.0211, 0.0216, 0.0221, 0.0226, 0.0231, 0.0236, 0.024, 0.0245, 0.025, 0.0255, 0.026, 0.0265, 0.027, 0.0275, 0.028, 0.0284, 0.0289, 0.0294, 0.0299, 0.0304, 0.0309, 0.0314, 0.0319, 0.0323, 0.0328, 0.0333, 0.0338, 0.0343, 0.0348, 0.0353, 0.0358, 0.0363, 0.0367, 0.0372, 0.0377, 0.0382, 0.0387, 0.0392, 0.0397, 0.0402, 0.0406, 0.0411, 0.0416, 0.0421, 0.0426, 0.0431, 0.0436, 0.0441, 0.0446, 0.045, 0.0455, 0.046, 0.0465, 0.047, 0.0475, 0.048, 0.0485, 0.0489, 0.0494, 0.0499];
+  const GW_H1 = [0.005, -0.076, -0.097, -0.063, -0.023, -0.015, -0.022, -0.014, 0.006, -0.001, -0.044, -0.082, -0.066, 0.007, 0.096, 0.15, 0.138, 0.066, -0.027, -0.088, -0.104, -0.097, -0.086, -0.065, -0.018, 0.046, 0.085, 0.062, -0.013, -0.096, -0.149, -0.154, -0.101, 0.013, 0.165, 0.295, 0.322, 0.198, -0.036, -0.246, -0.297, -0.162, 0.046, 0.162, 0.106, -0.068, -0.221, -0.25, -0.159, -0.047, -0.005, -0.03, -0.036, 0.05, 0.202, 0.314, 0.295, 0.156, -0.002, -0.069, -0.024, 0.051, 0.06, -0.007, -0.067, -0.034, 0.083, 0.176, 0.129, -0.064, -0.276, -0.359, -0.278, -0.142, -0.072, -0.071, -0.035, 0.1, 0.26, 0.316, 0.226, 0.087, 0.024, 0.075, 0.182, 0.248, 0.217, 0.097, -0.067, -0.22, -0.313, -0.307, -0.212, -0.099, -0.046, -0.068, -0.117, -0.134, -0.102, -0.05, -0.011, 0.012, 0.042, 0.095, 0.15, 0.159, 0.088, -0.027, -0.108, -0.112, -0.067, -0.025, -0.007, -0.002, 0.001, 0.005, 0.015, 0.035, 0.059, 0.072, 0.068, 0.053, 0.035, 0.015, -0.017, -0.046, -0.036, 0.043, 0.164, 0.243, 0.22, 0.121, 0.024, -0.032, -0.063, -0.093, -0.103, -0.064, 0.005, 0.038, 0.006, -0.037, -0.014, 0.068, 0.122, 0.081, -0.023, -0.101, -0.097, -0.027, 0.038, 0.031, -0.051, -0.144, -0.183, -0.16, -0.118, -0.093, -0.087, -0.087, -0.089, -0.096, -0.103, -0.092, -0.043, 0.045, 0.134, 0.162, 0.1, -0.01, -0.092, -0.109, -0.084, -0.05, -0.005, 0.063, 0.141, 0.197, 0.203, 0.164, 0.118, 0.108, 0.143, 0.183, 0.18, 0.141, 0.106, 0.095, 0.084, 0.052, 0.011, -0.006, 0.009, 0.033, 0.026, -0.023, -0.077, -0.083, -0.045, -0.031, -0.097, -0.226, -0.337, -0.367, -0.325, -0.266, -0.227, -0.186, -0.11, -0.014, 0.058, 0.09, 0.095, 0.086, 0.07, 0.058, 0.053, 0.049, 0.02, -0.047, -0.118, -0.136, -0.087, -0.028, -0.02, -0.05, -0.033, 0.104, 0.319, 0.473, 0.457, 0.308, 0.171, 0.148, 0.218, 0.284, 0.279, 0.203, 0.105, 0.047, 0.053, 0.078, 0.041, -0.085, -0.24, -0.335, -0.345, -0.309, -0.264, -0.22, -0.193, -0.206, -0.263, -0.33, -0.37, -0.363, -0.311, -0.232, -0.154, -0.095, -0.053, -0.014, 0.028, 0.081, 0.154, 0.238, 0.309, 0.343, 0.331, 0.283, 0.241, 0.246, 0.301, 0.366, 0.385, 0.327, 0.213, 0.1, 0.037, 0.038, 0.077, 0.117, 0.116, 0.027, -0.163, -0.394, -0.545, -0.519, -0.332, -0.117, -0.025, -0.099, -0.249, -0.335, -0.279, -0.131, -0.007, 0.007, -0.082, -0.202, -0.271, -0.234, -0.08, 0.138, 0.313, 0.343, 0.234, 0.127, 0.18, 0.408, 0.662, 0.754, 0.617, 0.348, 0.103, -0.028, -0.067, -0.092, -0.157, -0.255, -0.367, -0.477, -0.56, -0.579, -0.527, -0.434, -0.331, -0.229, -0.13, -0.056, -0.026, -0.011, 0.054, 0.214, 0.437, 0.634, 0.721, 0.69, 0.592, 0.474, 0.337, 0.156, -0.077, -0.335, -0.567, -0.726, -0.784, -0.733, -0.582, -0.346, -0.044, 0.299, 0.637, 0.896, 0.982, 0.83, 0.451, -0.06, -0.565, -0.913, -0.975, -0.703, -0.185, 0.355, 0.664, 0.599, 0.218, -0.238, -0.501, -0.449, -0.174, 0.115, 0.247, 0.191, 0.043, -0.07, -0.096, -0.061, -0.013, 0.039, 0.114, 0.201, 0.235, 0.167, 0.028, -0.086, -0.1, -0.019, 0.083, 0.129, 0.083, -0.03, -0.143, -0.188, -0.136, -0.017, 0.095, 0.125, 0.058, -0.055, -0.143, -0.178, -0.166, -0.113, -0.022, 0.089, 0.175, 0.195, 0.15, 0.083, 0.04, 0.022, -0.018, -0.114, -0.225, -0.265, -0.198, -0.072, 0.035, 0.088, 0.102, 0.1, 0.087, 0.05, -0.006, -0.045, -0.028, 0.038, 0.112, 0.16, 0.177, 0.159, 0.102, 0.03, -0.005, 0.019, 0.053, 0.019, -0.103, -0.25, -0.321, -0.265, -0.126, -0.001, 0.044, 0.019, -0.026, -0.05, -0.045, -0.008, 0.069];
+  const GW_L1 = [0.067, 0.072, 0.008, -0.083, -0.138, -0.128, -0.08, -0.033, -0.01, -0.004, -0.0, 0.0, -0.008, -0.006, 0.038, 0.117, 0.175, 0.167, 0.114, 0.077, 0.08, 0.092, 0.062, -0.012, -0.088, -0.115, -0.079, -0.018, 0.016, -0.004, -0.053, -0.076, -0.033, 0.05, 0.094, 0.047, -0.058, -0.125, -0.09, 0.018, 0.109, 0.118, 0.06, -0.009, -0.042, -0.026, 0.033, 0.102, 0.135, 0.094, -0.013, -0.122, -0.162, -0.122, -0.053, -0.021, -0.056, -0.141, -0.223, -0.239, -0.157, -0.017, 0.093, 0.127, 0.119, 0.125, 0.147, 0.142, 0.09, 0.024, -0.017, -0.018, 0.007, 0.032, 0.031, -0.005, -0.051, -0.061, -0.01, 0.072, 0.131, 0.141, 0.12, 0.104, 0.108, 0.107, 0.068, -0.015, -0.115, -0.19, -0.214, -0.178, -0.094, 0.007, 0.069, 0.047, -0.032, -0.09, -0.081, -0.036, -0.01, -0.016, -0.024, -0.003, 0.034, 0.045, 0.0, -0.084, -0.164, -0.186, -0.123, -0.005, 0.092, 0.105, 0.034, -0.054, -0.081, -0.018, 0.095, 0.183, 0.201, 0.163, 0.126, 0.121, 0.124, 0.082, -0.026, -0.148, -0.184, -0.078, 0.119, 0.276, 0.279, 0.113, -0.119, -0.264, -0.237, -0.082, 0.079, 0.159, 0.158, 0.115, 0.047, -0.051, -0.165, -0.248, -0.248, -0.156, -0.034, 0.034, 0.021, -0.025, -0.043, -0.02, 0.011, 0.012, -0.029, -0.094, -0.151, -0.161, -0.111, -0.031, 0.011, -0.011, -0.044, -0.01, 0.089, 0.158, 0.118, 0.004, -0.07, -0.037, 0.069, 0.16, 0.194, 0.192, 0.192, 0.211, 0.237, 0.236, 0.169, 0.039, -0.106, -0.199, -0.211, -0.169, -0.115, -0.061, 0.008, 0.075, 0.093, 0.036, -0.059, -0.11, -0.073, 0.019, 0.088, 0.083, 0.03, -0.014, -0.025, -0.029, -0.055, -0.103, -0.132, -0.114, -0.077, -0.085, -0.155, -0.224, -0.219, -0.14, -0.058, -0.042, -0.089, -0.127, -0.094, 0.01, 0.131, 0.202, 0.192, 0.135, 0.106, 0.143, 0.218, 0.255, 0.208, 0.101, 0.011, -0.007, 0.031, 0.066, 0.06, 0.041, 0.073, 0.174, 0.271, 0.252, 0.078, -0.17, -0.346, -0.348, -0.18, 0.055, 0.223, 0.239, 0.111, -0.072, -0.203, -0.232, -0.199, -0.194, -0.268, -0.377, -0.427, -0.354, -0.181, 0.003, 0.122, 0.163, 0.156, 0.116, 0.045, -0.03, -0.048, 0.017, 0.111, 0.158, 0.148, 0.134, 0.162, 0.215, 0.245, 0.228, 0.176, 0.112, 0.06, 0.037, 0.055, 0.101, 0.142, 0.143, 0.083, -0.034, -0.171, -0.275, -0.299, -0.234, -0.14, -0.087, -0.091, -0.107, -0.103, -0.101, -0.122, -0.144, -0.137, -0.119, -0.132, -0.174, -0.175, -0.074, 0.105, 0.272, 0.348, 0.328, 0.263, 0.196, 0.142, 0.111, 0.11, 0.128, 0.138, 0.125, 0.101, 0.092, 0.086, 0.038, -0.074, -0.227, -0.361, -0.427, -0.412, -0.339, -0.249, -0.177, -0.132, -0.105, -0.08, -0.039, 0.03, 0.131, 0.252, 0.364, 0.434, 0.453, 0.44, 0.408, 0.341, 0.219, 0.047, -0.131, -0.263, -0.345, -0.413, -0.492, -0.557, -0.543, -0.394, -0.11, 0.23, 0.503, 0.625, 0.614, 0.542, 0.431, 0.223, -0.129, -0.545, -0.826, -0.799, -0.45, 0.061, 0.49, 0.636, 0.444, 0.035, -0.364, -0.553, -0.471, -0.221, 0.033, 0.169, 0.175, 0.117, 0.068, 0.057, 0.076, 0.109, 0.142, 0.167, 0.177, 0.165, 0.123, 0.042, -0.064, -0.154, -0.186, -0.145, -0.053, 0.045, 0.105, 0.109, 0.083, 0.07, 0.092, 0.132, 0.146, 0.094, -0.024, -0.163, -0.25, -0.244, -0.167, -0.081, -0.036, -0.039, -0.061, -0.063, -0.028, 0.019, 0.038, 0.019, -0.012, -0.022, -0.016, -0.023, -0.045, -0.048, -0.015, 0.026, 0.04, 0.027, 0.02, 0.039, 0.062, 0.06, 0.032, 0.005, 0.007, 0.029, 0.045, 0.046, 0.037, 0.025, 0.013, 0.012, 0.03, 0.055, 0.068, 0.079, 0.094, 0.082, 0.009, -0.087, -0.123, -0.063, 0.036, 0.086, 0.04, -0.069];
+  const GW_NR = [0.003, 0.004, 0.008, 0.014, 0.019, 0.023, 0.023, 0.019, 0.012, 0.003, -0.007, -0.014, -0.016, -0.014, -0.008, -0.002, 0.003, 0.003, 0.0, -0.004, -0.008, -0.01, -0.009, -0.009, -0.009, -0.012, -0.018, -0.023, -0.027, -0.028, -0.027, -0.025, -0.024, -0.024, -0.023, -0.021, -0.014, -0.004, 0.007, 0.015, 0.016, 0.011, 0.001, -0.01, -0.018, -0.022, -0.02, -0.015, -0.009, -0.003, 0.002, 0.006, 0.01, 0.016, 0.022, 0.028, 0.033, 0.035, 0.036, 0.034, 0.032, 0.03, 0.027, 0.024, 0.02, 0.014, 0.008, 0.003, 0.001, 0.003, 0.008, 0.015, 0.021, 0.023, 0.019, 0.009, -0.002, -0.013, -0.018, -0.016, -0.008, 0.003, 0.013, 0.019, 0.019, 0.015, 0.008, 0.0, -0.006, -0.013, -0.021, -0.029, -0.038, -0.046, -0.051, -0.054, -0.053, -0.051, -0.049, -0.048, -0.048, -0.047, -0.045, -0.041, -0.034, -0.026, -0.019, -0.014, -0.011, -0.011, -0.01, -0.007, -0.001, 0.009, 0.022, 0.036, 0.051, 0.064, 0.075, 0.082, 0.084, 0.081, 0.074, 0.064, 0.053, 0.042, 0.032, 0.024, 0.019, 0.018, 0.02, 0.024, 0.029, 0.031, 0.029, 0.023, 0.015, 0.008, 0.004, 0.004, 0.006, 0.008, 0.005, -0.005, -0.022, -0.042, -0.061, -0.074, -0.08, -0.077, -0.07, -0.06, -0.053, -0.049, -0.05, -0.056, -0.065, -0.075, -0.083, -0.085, -0.081, -0.069, -0.052, -0.035, -0.019, -0.009, -0.002, 0.002, 0.006, 0.011, 0.019, 0.029, 0.041, 0.055, 0.069, 0.081, 0.089, 0.092, 0.092, 0.091, 0.092, 0.096, 0.103, 0.113, 0.121, 0.126, 0.125, 0.118, 0.106, 0.091, 0.074, 0.056, 0.036, 0.012, -0.015, -0.045, -0.077, -0.108, -0.133, -0.152, -0.163, -0.167, -0.166, -0.162, -0.157, -0.15, -0.141, -0.129, -0.116, -0.102, -0.09, -0.079, -0.069, -0.058, -0.045, -0.03, -0.012, 0.008, 0.029, 0.051, 0.073, 0.095, 0.115, 0.13, 0.14, 0.145, 0.146, 0.146, 0.147, 0.149, 0.15, 0.148, 0.141, 0.13, 0.115, 0.098, 0.082, 0.068, 0.054, 0.041, 0.027, 0.01, -0.01, -0.034, -0.061, -0.091, -0.121, -0.15, -0.177, -0.201, -0.222, -0.237, -0.244, -0.242, -0.23, -0.21, -0.184, -0.155, -0.127, -0.099, -0.07, -0.038, -0.002, 0.036, 0.077, 0.116, 0.152, 0.184, 0.21, 0.231, 0.247, 0.259, 0.266, 0.269, 0.266, 0.257, 0.24, 0.214, 0.179, 0.136, 0.085, 0.03, -0.024, -0.075, -0.118, -0.152, -0.179, -0.2, -0.22, -0.24, -0.261, -0.279, -0.293, -0.299, -0.295, -0.282, -0.26, -0.228, -0.187, -0.137, -0.08, -0.017, 0.047, 0.108, 0.167, 0.221, 0.27, 0.315, 0.353, 0.383, 0.402, 0.409, 0.399, 0.369, 0.319, 0.247, 0.158, 0.058, -0.047, -0.151, -0.247, -0.331, -0.401, -0.452, -0.482, -0.489, -0.473, -0.432, -0.365, -0.271, -0.15, -0.007, 0.15, 0.307, 0.447, 0.556, 0.621, 0.635, 0.593, 0.493, 0.338, 0.133, -0.107, -0.358, -0.588, -0.763, -0.85, -0.824, -0.67, -0.392, -0.016, 0.401, 0.773, 1.0, 0.999, 0.738, 0.27, -0.273, -0.71, -0.885, -0.735, -0.329, 0.158, 0.52, 0.615, 0.431, 0.084, -0.246, -0.412, -0.362, -0.153, 0.09, 0.251, 0.271, 0.17, 0.019, -0.099, -0.135, -0.088, 0.001, 0.079, 0.108, 0.079, 0.013, -0.056, -0.099, -0.103, -0.075, -0.035, 0.001, 0.02, 0.02, 0.009, -0.004, -0.011, -0.01, -0.0, 0.013, 0.026, 0.033, 0.034, 0.03, 0.022, 0.014, 0.005, -0.005, -0.016, -0.028, -0.039, -0.045, -0.044, -0.037, -0.027, -0.017, -0.009, -0.005, -0.006, -0.009, -0.012, -0.014, -0.013, -0.007, 0.003, 0.017, 0.032, 0.046, 0.057, 0.064, 0.067, 0.064, 0.057, 0.045, 0.029, 0.012, -0.003, -0.013, -0.019, -0.02, -0.02, -0.022, -0.026, -0.031, -0.034, -0.034, -0.03, -0.022, -0.013, -0.006, -0.002, -0.002, -0.005];
+  // H1 from -1.6 to +0.4 s, every frequency raised by 400 Hz, int8 at 4096 samples/s, base64.
+  const GW_AUDIO = "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";
+  const GW_AUDIO_RATE = 4096;     // samples per second in GW_AUDIO
+  const GW_AUDIO_T0 = -1.6;       // s from the event at the clip's first sample
+  const GW_SCALE_BAR = 0.1;       // s, length of the time scale bar
+  let ligoAudio = null;           // its own audio context, separate from the top animation's
+  let ligoBuffer = null;
+  let ligoVoice = null;
+  let ligoPlayT0 = null;          // page time the clip started (null = never)
+  let ligoSettled = true;         // as squeezeSettled: animate until the end frame is drawn
+  let lg = null;
+
+  // Decode the int8 clip and resample it linearly to the audio device's rate.
+  function ligoClipBuffer(ac) {
+    const bytes = atob(GW_AUDIO);
+    const n = bytes.length;
+    const src = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      let b = bytes.charCodeAt(i);
+      if (b > 127) b -= 256;  // bytes are two's-complement int8
+      src[i] = b / 127;
+    }
+    const rate = ac.sampleRate;
+    const m = Math.floor((n * rate) / GW_AUDIO_RATE);
+    const buf = ac.createBuffer(1, m, rate);
+    const out = buf.getChannelData(0);
+    for (let j = 0; j < m; j++) {
+      const x = (j * GW_AUDIO_RATE) / rate;
+      const i0 = Math.floor(x);
+      const i1 = Math.min(n - 1, i0 + 1);
+      out[j] = 0.8 * lerp(src[i0], src[i1], x - i0);
+    }
+    return buf;
+  }
+  const GW_CLIP_SECONDS = atob(GW_AUDIO).length / GW_AUDIO_RATE;
+
+  const ligoEl = document.getElementById("ligo");
+  const ligoCanvas = document.getElementById("ligo-canvas");
+  const ligoScene = addScene(ligoEl, {
+    layout: function () { lg = fitCanvas(ligoCanvas); },
+    draw: function (t, col) {
+      const c = lg.ctx;
+      const w = lg.w;
+      const h = lg.h;
+      c.clearRect(0, 0, w, h);
+      const x0 = 6;
+      const x1 = w - 6;
+      const tMin = GW_T[0];
+      const tMax = GW_T[GW_T.length - 1];
+      function X(tt) { return x0 + ((tt - tMin) / (tMax - tMin)) * (x1 - x0); }
+      const axisH = 22;                      // px kept below the panels for the scale bar
+      const panelH = (h - axisH) / 2;
+      const panels = [
+        { name: "Washington detector", data: GW_H1, color: col.wave, top: 0 },
+        { name: "Louisiana detector", data: GW_L1, color: col.accent, top: panelH },
+      ];
+      c.lineJoin = "round";
+      for (const p of panels) {
+        const mid = p.top + panelH / 2 + 5;  // a little room for the label at the top
+        const amp = panelH / 2 - 9;          // px for a value of 1 (the prediction's peak)
+        c.strokeStyle = col.rule;
+        c.lineWidth = 1;
+        c.beginPath();
+        c.moveTo(x0, mid);
+        c.lineTo(x1, mid);
+        c.stroke();
+        // What the detector measured, then Einstein's prediction on top.
+        // [values, color, width px, opacity]. The prediction is a thin line in the text color,
+        // so it stays distinct from both detector colors in light and dark themes.
+        const traces = [[p.data, p.color, 1.5, 1], [GW_NR, col.ink, 1.1, 0.85]];
+        for (const tr of traces) {
+          c.strokeStyle = tr[1];
+          c.lineWidth = tr[2];
+          c.globalAlpha = tr[3];
+          c.beginPath();
+          for (let i = 0; i < GW_T.length; i++) {
+            const Y = mid - amp * tr[0][i];
+            if (i === 0) c.moveTo(X(GW_T[i]), Y);
+            else c.lineTo(X(GW_T[i]), Y);
+          }
+          c.stroke();
+        }
+        c.globalAlpha = 1;
+        c.font = MONO_FONT;
+        c.textAlign = "left";
+        c.textBaseline = "top";
+        c.fillStyle = col.ink;
+        c.fillText(p.name, x0 + 2, p.top + 2);
+      }
+
+      // Time scale bar, bottom right.
+      const barW = X(tMin + GW_SCALE_BAR) - X(tMin);
+      const barY = h - 8;
+      c.strokeStyle = col.soft;
+      c.lineWidth = 1.5;
+      c.beginPath();
+      c.moveTo(x1 - barW, barY);
+      c.lineTo(x1, barY);
+      c.moveTo(x1 - barW, barY - 4);
+      c.lineTo(x1 - barW, barY + 4);
+      c.moveTo(x1, barY - 4);
+      c.lineTo(x1, barY + 4);
+      c.stroke();
+      c.fillStyle = col.soft;
+      c.textAlign = "right";
+      c.textBaseline = "middle";
+      c.fillText("0.1 second", x1 - barW - 6, barY);
+
+      // Playhead while the sound runs (the clip starts 1.6 s before the plotted stretch).
+      if (ligoPlayT0 !== null) {
+        const s = t - ligoPlayT0;
+        if (s >= GW_CLIP_SECONDS + 0.05) ligoSettled = true;
+        const te = GW_AUDIO_T0 + s;
+        if (s < GW_CLIP_SECONDS && te >= tMin && te <= tMax) {
+          c.strokeStyle = col.ink;
+          c.lineWidth = 1.5;
+          c.beginPath();
+          c.moveTo(X(te), 0);
+          c.lineTo(X(te), h - axisH);
+          c.stroke();
+        }
+      }
+    },
+    moving: function () { return !ligoSettled; },
+  });
+  document.getElementById("ligo-play").addEventListener("click", function () {
+    // Safari 16.4+: play even when an iPhone's ring switch is on silent.
+    if ("audioSession" in navigator) navigator.audioSession.type = "playback";
+    if (ligoAudio === null) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      ligoAudio = new AC();
+      ligoBuffer = ligoClipBuffer(ligoAudio);
+    }
+    ligoAudio.resume();
+    if (ligoVoice !== null) ligoVoice.stop();
+    ligoVoice = ligoAudio.createBufferSource();
+    ligoVoice.buffer = ligoBuffer;
+    ligoVoice.connect(ligoAudio.destination);
+    ligoVoice.start();
+    ligoPlayT0 = now();
+    ligoSettled = false;
+    refresh(ligoScene);
+  });
+
+  // ===========================================================================
+  // Act cards: the slice of the collision signal that each project studies
+  // ===========================================================================
+  const ACT_WINDOWS = [
+    [0, ACT2_START],                         // act 1: the long spiral
+    [ACT2_START - 0.15, ACT3_START + 0.2],   // act 2: around the crash
+    [ACT3_START, TRACE_END],                 // act 3: the fading ring
+  ];
+  const actCanvases = document.querySelectorAll("#actmap canvas");
+  let actFits = [];
+  addScene(document.getElementById("actmap"), {
+    layout: function () { actFits = Array.from(actCanvases, fitCanvas); },
+    draw: function (t, col) {
+      actFits.forEach(function (f, i) {
+        const t0 = ACT_WINDOWS[i][0];
+        const t1 = ACT_WINDOWS[i][1];
+        const c = f.ctx;
+        c.clearRect(0, 0, f.w, f.h);
+        c.strokeStyle = col.wave;
+        c.lineWidth = 1.75;
+        c.lineJoin = "round";
+        c.beginPath();
+        for (let px = 0; px <= f.w; px += 1) {
+          const ch = chirp(t0 + ((t1 - t0) * px) / f.w);
+          const y = f.h / 2 - (f.h / 2 - 3) * ch.A * Math.cos(TAU * F0_VIS * ch.cycles);
+          if (px === 0) c.moveTo(px, y);
+          else c.lineTo(px, y);
+        }
+        c.stroke();
+      });
+    },
+    moving: function () { return false; },
+  });
+
+  // ===========================================================================
+  // Pulsar timing, as a one-dimensional cartoon: a pulsar sends evenly spaced flashes along
+  // a line to Earth, and you can send a gravitational wave past the pulsar.
+  // Pulsar term only (the wave's effect at Earth is left out). In a frame where Earth stays
+  // put, the wave jiggles the pulsar along the line. Its velocity toward or away from us
+  // follows the strain at the pulsar (that is the Doppler shift, in phase with the wave), so
+  // its displacement is the time integral of that and peaks a quarter cycle after each crest:
+  //   x_p(t) = PULSAR_SWING · c · envelope · cos 2π (t/GW_PERIOD − p_p/(c·GW_PERIOD)),
+  // where p_p is the pulsar's position along the wave's direction and +x_p is toward Earth.
+  // A flash leaves from x_p(t_e) and travels at c, so it arrives early by x_p(t_e)/c: the
+  // arrival times trace the pulsar's jiggle, which is the wave, one travel time later.
+  // Every size is a cartoon: real timing shifts are ~100 ns, i.e. tens of metres of light travel.
+  // ===========================================================================
+  const PULSE_PERIOD = 0.25;   // s between flashes (real millisecond pulsars: a few ms)
+  const TRAVEL = 4.0;          // s for a flash to cross from pulsar to Earth (real: thousands of years)
+  const GW_PERIOD = 3.0;       // s per gravitational-wave cycle (real: years); 12 flashes per cycle
+  const GW_DIR = 2.2;          // rad, direction the wave travels on screen (0 = along the line toward Earth; y points down)
+  const PULSAR_SWING = 0.3;    // s: the pulsar swings ± this many light-seconds, hugely exaggerated.
+                               // Its top speed is 2π · PULSAR_SWING / GW_PERIOD ≈ 0.63 c, so the gap
+                               // between flashes swings from about 0.4× to 1.6× its usual size.
+  const GW_EDGE_PX = 60;       // px over which the wave's front and back edges fade in and out
+  const RESID_FULL = 0.36;     // s early or late that reaches the edge of the plot (largest is PULSAR_SWING)
+  const PLOT_WINDOW = 14;      // s of arrivals shown in the plot
+  const MARKERS = 28;          // evenly spaced ticks along the line, for reference
+
+  let ps = null;               // canvas plus geometry, set in layout
+  let simT = 0;                // s, simulation time
+  let lastPageT = null;        // s, page time of the previous frame
+  let nextEmit = 0;            // s, when the next flash leaves the pulsar
+  let lastEmit = -10;          // s, when the last flash left
+  let lastArrival = -10;       // s, when the last flash reached Earth
+  let flashes = [];            // in flight: {tEmit: s, xEmit: screen px it left from, tArr: s}
+  // {t: expected arrival time (with no wave), r: actual − expected arrival time}, s.
+  // Dots are plotted at the expected time, as timing residuals are, against the timing model.
+  // Plotting at the actual arrival time would shear the curve sideways by r itself, which at
+  // this cartoon's v/c ≈ 0.63 turns the sine wave into a lopsided one (~30% second harmonic).
+  let arrivals = [];
+  let gwOn = null;             // s, when the wave was sent (null = never)
+  let gwOff = null;            // s, when it was stopped (null = still running)
+
+  // How much of the wave has reached projection p by time t: 0 before its front, 1 inside it,
+  // back to 0 behind its tail once it has been stopped. Both edges move at c.
+  function gwEnvelope(p, t) {
+    if (gwOn === null) return 0;
+    const reach = p - ps.pmin;  // px from where the wave enters the picture
+    let env = smoothstep(0, GW_EDGE_PX, ps.c * (t - gwOn) - reach);
+    if (gwOff !== null) env *= 1 - smoothstep(0, GW_EDGE_PX, ps.c * (t - gwOff) - reach);
+    return env;
+  }
+  function gwPhase(p, t) { return TAU * (t / GW_PERIOD - p / (ps.c * GW_PERIOD)); }
+  // How far the wave has moved the pulsar toward Earth at time t, px.
+  function pulsarShift(t) {
+    const p = ps.x0 * ps.dirX + ps.trackY * ps.dirY;  // the pulsar's position along the wave's direction
+    return PULSAR_SWING * ps.c * gwEnvelope(p, t) * Math.cos(gwPhase(p, t));
+  }
+  // A "#RRGGBB" color token plus an opacity, as an rgba() string for gradient stops.
+  function rgba(hex, a) {
+    const n = parseInt(hex.slice(1), 16);
+    return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a.toFixed(3) + ")";
+  }
+
+  // Flashes move at constant speed from wherever the pulsar was, so each one's arrival time
+  // is known the moment it leaves; stepping only has to release and collect them.
+  function stepSim(dt) {
+    simT += dt;
+    while (nextEmit <= simT) {
+      const xEmit = ps.x0 + pulsarShift(nextEmit);
+      flashes.push({ tEmit: nextEmit, xEmit: xEmit, tArr: nextEmit + (ps.x1 - xEmit) / ps.c });
+      lastEmit = nextEmit;
+      nextEmit += PULSE_PERIOD;
+    }
+    const still = [];
+    for (const f of flashes) {
+      if (f.tArr > simT) {
+        still.push(f);
+        continue;
+      }
+      arrivals.push({ t: f.tEmit + TRAVEL, r: f.tArr - f.tEmit - TRAVEL });
+      lastArrival = f.tArr;
+    }
+    flashes = still;
+    while (arrivals.length && arrivals[0].t < simT - PLOT_WINDOW - 1) arrivals.shift();
+  }
+
+  const pulsarEl = document.getElementById("pulsar");
+  const pulsarCanvas = document.getElementById("pulsar-canvas");
+  const pulsarScene = addScene(pulsarEl, {
+    layout: function () {
+      const old = ps;
+      const fit = fitCanvas(pulsarCanvas);
+      const trackY = 50;
+      const waveBottom = trackY + 42;          // the wave is drawn above this line
+      const x0 = 64;                            // the pulsar's resting place, with room for it to swing left
+      const x1 = fit.w - 40;                    // where flashes reach Earth
+      const dirX = Math.cos(GW_DIR);
+      const dirY = Math.sin(GW_DIR);
+      // Smallest projection over the wave area's corners: the wave enters there.
+      const pmin = Math.min(0, fit.w * dirX, waveBottom * dirY, fit.w * dirX + waveBottom * dirY);
+      ps = {
+        ctx: fit.ctx, w: fit.w, h: fit.h, dpr: fit.dpr,
+        trackY: trackY, waveBottom: waveBottom, x0: x0, x1: x1, D: x1 - x0,
+        c: (x1 - x0) / TRAVEL,                  // px per s
+        dirX: dirX, dirY: dirY, pmin: pmin,
+      };
+      // When the width changes, rescale where flashes in flight left from; their arrival times stay the same.
+      if (old !== null) for (const f of flashes) f.xEmit = ps.x0 + ((f.xEmit - old.x0) * ps.D) / old.D;
+    },
+    draw: function (pageT, col) {
+      if (lastPageT !== null && !REDUCED) stepSim(Math.min(0.05, Math.max(0, pageT - lastPageT)));
+      lastPageT = pageT;
+      const c = ps.ctx;
+      const w = ps.w;
+      const h = ps.h;
+      const y = ps.trackY;
+      c.clearRect(0, 0, w, h);
+
+      // 1. The gravitational wave, passing the pulsar: bands where space is stretched, lines
+      //    along the crests, all moving at the speed of light. It fades out toward Earth,
+      //    because here we ignore what it does there.
+      const pPulsar = ps.x0 * ps.dirX + y * ps.dirY;
+      const envAtPulsar = gwEnvelope(pPulsar, simT);
+      if (gwOn !== null) {
+        c.save();
+        c.beginPath();
+        c.rect(0, 0, w, ps.waveBottom);
+        c.clip();
+        const pmax = Math.max(0, w * ps.dirX, ps.waveBottom * ps.dirY, w * ps.dirX + ps.waveBottom * ps.dirY);
+        // Shading: a gradient along the wave's direction, whose position along the gradient is exactly the projection p.
+        const BAND_STOPS = 64;
+        const bands = c.createLinearGradient(ps.pmin * ps.dirX, ps.pmin * ps.dirY, pmax * ps.dirX, pmax * ps.dirY);
+        for (let i = 0; i <= BAND_STOPS; i++) {
+          const p = lerp(ps.pmin, pmax, i / BAND_STOPS);
+          const stretch = gwEnvelope(p, simT) * Math.sin(gwPhase(p, simT));
+          bands.addColorStop(i / BAND_STOPS, rgba(col.wave, 0.25 * Math.max(0, stretch)));
+        }
+        c.fillStyle = bands;
+        c.fillRect(0, 0, w, ps.waveBottom);
+        // Crest n sits where t/P − p/(cP) = n + 1/4, i.e. p = c (t − (n + 1/4) P).
+        c.strokeStyle = col.wave;
+        c.lineWidth = 2;
+        const nFirst = Math.floor(simT / GW_PERIOD - pmax / (ps.c * GW_PERIOD) - 0.25);
+        const nLast = Math.ceil(simT / GW_PERIOD - ps.pmin / (ps.c * GW_PERIOD) - 0.25);
+        const span = w + ps.waveBottom;
+        for (let n = nFirst; n <= nLast; n++) {
+          const p = ps.c * (simT - (n + 0.25) * GW_PERIOD);
+          const env = gwEnvelope(p, simT);
+          if (env <= 0.01) continue;
+          c.globalAlpha = 0.5 * env;
+          c.beginPath();
+          c.moveTo(p * ps.dirX - span * ps.dirY, p * ps.dirY + span * ps.dirX);
+          c.lineTo(p * ps.dirX + span * ps.dirY, p * ps.dirY - span * ps.dirX);
+          c.stroke();
+        }
+        c.globalAlpha = 1;
+        // Fade the wave out between the pulsar and Earth by painting the background over it.
+        const fadeFrom = ps.x0 + 60;
+        const fadeTo = ps.x0 + 200;
+        const fade = c.createLinearGradient(fadeFrom, 0, fadeTo, 0);
+        fade.addColorStop(0, rgba(col.surface, 0));
+        fade.addColorStop(1, rgba(col.surface, 1));
+        c.fillStyle = fade;
+        c.fillRect(fadeFrom, 0, w - fadeFrom, ps.waveBottom);
+        c.restore();
+        if (envAtPulsar > 0.01) {
+          c.fillStyle = col.ink;
+          c.globalAlpha = envAtPulsar;
+          c.font = MONO_FONT;
+          c.textAlign = "left";
+          c.textBaseline = "top";
+          c.fillText("gravitational wave", 6, 6);
+          c.globalAlpha = 1;
+        }
+      }
+
+      // 2. The line from the pulsar to Earth, with evenly spaced ticks for reference.
+      c.strokeStyle = col.rule;
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(ps.x0, y);
+      c.lineTo(ps.x1, y);
+      c.stroke();
+      c.strokeStyle = col.soft;
+      c.globalAlpha = 0.5;
+      c.beginPath();
+      for (let m = 1; m < MARKERS; m++) {
+        const X = ps.x0 + (m * ps.D) / MARKERS;
+        c.moveTo(X, y - 5);
+        c.lineTo(X, y + 5);
+      }
+      c.stroke();
+      c.globalAlpha = 1;
+
+      // 3. Flashes in flight, each moving at c from wherever the pulsar was when it left.
+      c.save();
+      c.fillStyle = col.accent;
+      c.shadowColor = col.accent;
+      c.shadowBlur = 6;
+      for (const f of flashes) {
+        c.beginPath();
+        c.arc(f.xEmit + ps.c * (simT - f.tEmit), y, 3.5, 0, TAU);
+        c.fill();
+      }
+      c.restore();
+
+      // 4. The pulsar, jiggled by the wave. A dashed ring marks where it sits with no wave.
+      c.strokeStyle = col.soft;
+      c.lineWidth = 1;
+      c.setLineDash([3, 3]);
+      c.beginPath();
+      c.arc(ps.x0, y, 8, 0, TAU);
+      c.stroke();
+      c.setLineDash([]);
+      const px = ps.x0 + pulsarShift(simT);
+      const ang = (TAU * simT) / PULSE_PERIOD;  // a beam points at Earth each time a flash leaves
+      c.fillStyle = col.accent;
+      c.globalAlpha = 0.35;
+      for (const a of [ang, ang + Math.PI]) {
+        c.beginPath();
+        c.moveTo(px, y);
+        c.lineTo(px + 20 * Math.cos(a - 0.12), y + 20 * Math.sin(a - 0.12));
+        c.lineTo(px + 20 * Math.cos(a + 0.12), y + 20 * Math.sin(a + 0.12));
+        c.closePath();
+        c.fill();
+      }
+      c.globalAlpha = 0.6 * Math.exp(-(simT - lastEmit) / 0.08);
+      c.beginPath();
+      c.arc(px, y, 13, 0, TAU);
+      c.fill();
+      c.globalAlpha = 1;
+      c.fillStyle = col.ink;
+      c.beginPath();
+      c.arc(px, y, 5, 0, TAU);
+      c.fill();
+
+      // 5. Earth, which stays put here, with a ring each time a flash lands.
+      const ex = w - 22;
+      drawThing(c, "earth", ex, y, 12, col);
+      c.strokeStyle = col.accent;
+      c.lineWidth = 2;
+      c.globalAlpha = Math.exp(-(simT - lastArrival) / 0.15);
+      c.beginPath();
+      c.arc(ex, y, 16, 0, TAU);
+      c.stroke();
+      c.globalAlpha = 1;
+      c.fillStyle = col.ink;
+      c.font = MONO_FONT;
+      c.textAlign = "center";
+      c.textBaseline = "top";
+      c.fillText("pulsar", ps.x0, y + 22);
+      c.fillText("Earth", ex, y + 22);
+
+      // 6. When each flash reached Earth, compared with when it should have, newest on the right.
+      c.strokeStyle = col.rule;
+      c.beginPath();
+      c.moveTo(0, ps.waveBottom + 8);
+      c.lineTo(w, ps.waveBottom + 8);
+      c.stroke();
+      const top = ps.waveBottom + 34;
+      const bottom = h - 10;
+      const mid = (top + bottom) / 2;
+      const half = (bottom - top) / 2;
+      const plotX0 = 64;
+      const plotX1 = w - 10;
+      c.textAlign = "left";
+      c.fillText("when each flash reaches Earth", plotX0, ps.waveBottom + 14);
+      c.textAlign = "right";
+      c.textBaseline = "middle";
+      c.fillText("early", plotX0 - 8, top);
+      c.fillText("on time", plotX0 - 8, mid);
+      c.fillText("late", plotX0 - 8, bottom);
+      c.beginPath();
+      c.moveTo(plotX0, mid);
+      c.lineTo(plotX1, mid);
+      c.stroke();
+      // An early flash lands before its expected time, so the right edge sits PULSAR_SWING
+      // (the earliest a flash can be) ahead of now, keeping every new dot inside the plot.
+      const plotNow = simT + PULSAR_SWING;
+      const pts = [];
+      for (const a of arrivals) {
+        const X = plotX1 - ((plotNow - a.t) / PLOT_WINDOW) * (plotX1 - plotX0);
+        if (X < plotX0) continue;
+        const Y = mid + Math.max(-1, Math.min(1, a.r / RESID_FULL)) * half;  // late is down, early is up
+        pts.push([X, Y]);
+      }
+      c.strokeStyle = col.wave;
+      c.globalAlpha = 0.35;
+      c.lineWidth = 1.5;
+      c.beginPath();
+      pts.forEach(function (q, i) {
+        if (i === 0) c.moveTo(q[0], q[1]);
+        else c.lineTo(q[0], q[1]);
+      });
+      c.stroke();
+      c.globalAlpha = 1;
+      pts.forEach(function (q, i) {
+        c.fillStyle = i === pts.length - 1 ? col.accent : col.wave;
+        c.beginPath();
+        c.arc(q[0], q[1], 3, 0, TAU);
+        c.fill();
+      });
+    },
+    moving: function () { return !REDUCED; },
+  });
+  // Start with the line already full of flashes and a few arrivals on the plot.
+  stepSim(TRAVEL + 4);
+  wireSeg(document.getElementById("pulsar-seg"), function (key) {
+    if (key === "on" && (gwOn === null || gwOff !== null)) {
+      gwOn = simT;
+      gwOff = null;
+    }
+    if (key === "off" && gwOn !== null && gwOff === null) gwOff = simT;
+    // With motion turned off, jump ahead so the effect shows in one still picture.
+    if (REDUCED) stepSim(TRAVEL + PLOT_WINDOW);
+    refresh(pulsarScene);
+  });
+
+  // ===========================================================================
+  // The crowd: many giant pairs, each a clean wave, adding up to a hum
+  // ===========================================================================
+  const CROWD_SCROLL = 50;  // px per second the signal strip slides
+  const PAIR_LOOK = {       // dot radius and spacing (px) for each crowd size
+    1: { r: 5, sep: 11 },
+    10: { r: 3, sep: 6 },
+    100: { r: 1.8, sep: 3.6 },
+    1000: { r: 1.1, sep: 2.4 },
+  };
+  const CROWD_TEXT = {
+    1: "One pair makes a clean wave, easy to pick out. Now add more.",
+    10: "Ten pairs: already getting messy.",
+    100: "A hundred pairs: a jumble.",
+    1000: "A thousand pairs: a hum. You can’t pick out any one pair, but the hum still tells you about the crowd, like the roar outside a stadium.",
+  };
+  let crowdN = 1;
+  let crowd = null;  // {buf, L, pairs}
+  let cr = null;
+
+  // The signal is a sum of sine waves, one per pair. Each has a whole number of
+  // cycles per buffer, so the buffer loops seamlessly as it scrolls.
+  function buildCrowd(n, w) {
+    const rand = seededRandom(7 + n);
+    const L = Math.max(300, Math.round(3 * w));  // samples, one per px
+    const buf = new Float32Array(L);
+    const pairs = [];
+    for (let i = 0; i < n; i++) {
+      const cycles = n === 1 ? 12 : 4 + Math.floor(rand() * 60);
+      const amp = n === 1 ? 1 : 0.15 + 0.85 * Math.pow(rand(), 3);  // a few loud pairs, many quiet ones
+      const phase = rand() * TAU;
+      for (let j = 0; j < L; j++) buf[j] += amp * Math.sin((TAU * cycles * j) / L + phase);
+      const x = n === 1 ? 0.5 : rand();
+      const y = n === 1 ? 0.5 : rand();
+      pairs.push({ x: x, y: y, cycles: cycles, amp: amp, phase: phase });
+    }
+    let peak = 0;
+    for (let j = 0; j < L; j++) peak = Math.max(peak, Math.abs(buf[j]));
+    for (let j = 0; j < L; j++) buf[j] /= peak;  // fit the strip; the caption, not the height, carries "louder"
+    return { buf: buf, L: L, pairs: pairs };
+  }
+
+  const crowdEl = document.getElementById("crowd");
+  const crowdCanvas = document.getElementById("crowd-canvas");
+  const crowdReadout = document.getElementById("crowd-readout");
+  const crowdScene = addScene(crowdEl, {
+    layout: function () {
+      cr = fitCanvas(crowdCanvas);
+      crowd = buildCrowd(crowdN, cr.w);
+    },
+    draw: function (t, col) {
+      const c = cr.ctx;
+      const w = cr.w;
+      const h = cr.h;
+      c.clearRect(0, 0, w, h);
+      const skyH = h * 0.55;
+      const look = PAIR_LOOK[crowdN];
+      const loopSeconds = crowd.L / CROWD_SCROLL;
+
+      // The sky: each pair is two dots circling at half its ripple frequency.
+      c.fillStyle = col.accent;
+      for (const p of crowd.pairs) {
+        const ang = (Math.PI * p.cycles * t) / loopSeconds + p.phase;
+        const cx = 10 + p.x * (w - 20);
+        const cy = 10 + p.y * (skyH - 20);
+        const ox = look.sep * Math.cos(ang);
+        const oy = look.sep * Math.sin(ang);
+        c.globalAlpha = 0.35 + 0.65 * p.amp;
+        if (look.r < 1.5) {
+          c.fillRect(cx + ox - look.r, cy + oy - look.r, 2 * look.r, 2 * look.r);
+          c.fillRect(cx - ox - look.r, cy - oy - look.r, 2 * look.r, 2 * look.r);
+        } else {
+          c.beginPath();
+          c.arc(cx + ox, cy + oy, look.r, 0, TAU);
+          c.arc(cx - ox, cy - oy, look.r, 0, TAU);
+          c.fill();
+        }
+      }
+      c.globalAlpha = 1;
+
+      // The strip: what all of them add up to.
+      c.strokeStyle = col.rule;
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(0, skyH + 4);
+      c.lineTo(w, skyH + 4);
+      c.stroke();
+      c.fillStyle = col.ink;
+      c.font = MONO_FONT;
+      c.textAlign = "left";
+      c.textBaseline = "top";
+      c.fillText("what we’d measure", 4, skyH + 10);
+      const top = skyH + 28;
+      const bottom = h - 6;
+      const mid = (top + bottom) / 2;
+      const half = (bottom - top) / 2;
+      const offset = Math.floor(t * CROWD_SCROLL) % crowd.L;
+      c.strokeStyle = col.wave;
+      c.lineWidth = 1.5;
+      c.lineJoin = "round";
+      c.beginPath();
+      for (let x = 0; x <= w; x++) {
+        const v = crowd.buf[(offset + x) % crowd.L];
+        if (x === 0) c.moveTo(x, mid - half * v);
+        else c.lineTo(x, mid - half * v);
+      }
+      c.stroke();
+    },
+    moving: function () { return !REDUCED; },
+  });
+  wireSeg(document.getElementById("crowd-seg"), function (key) {
+    crowdN = Number(key);
+    crowd = buildCrowd(crowdN, cr.w);
+    crowdReadout.textContent = CROWD_TEXT[crowdN];
+    refresh(crowdScene);
+  });
+
+  // ===========================================================================
+  // Boxes in space ("mesh refinement"), from my paper run q7paper (qpoint7_paper.par,
+  // λ = 0.7). Lengths and times in M (total mass, G = c = 1).
+  //   Level L has boxes dx0/2^L, dx0 = 256/65 M (finest, level 8: M/65).
+  //   Level 0: the whole domain, ±1043.69 M as Carpet printed it.
+  //   Level L ≥ 1: a box of half-width 512/2^L + 12 dx_L around each puncture
+  //   (CarpetRegrid2 radius + 12 buffer points), its edges rounded to the parent level's grid points.
+  //   The two sets of boxes are 180° rotations of each other (RotatingSymmetry180).
+  // Motion: puncture 0's path from PunctureTracker, every 0.5 M (puncture 1 = −puncture 0).
+  //   The boxes move only once the puncture has drifted more than 0.115 M from the last box
+  //   centre (CarpetRegrid2::movement_threshold_1); MESH_REGRIDS lists those moves [t, x, y].
+  //   Checked against the grid Carpet printed in q7paper.out: exact at t = 0, within 1–2 grid
+  //   points at t ≈ 56 M and after the merger. 80 box moves up to t = 110 M.
+  // Horizons: each black hole's mean coordinate radius from AHFinderDirect (ah1), every 1 M:
+  //   0.16 M at t = 0, 0.30 M from t ≈ 5 M, shrinking to 0.16 M by t = 88 M as they merge.
+  //   Merged horizon: 0.55 M (ah3). This run only searched for it from t = 300 M, so when it
+  //   first appears is not in the data; here it fades in over MESH_MERGE_START … MESH_MERGE_END.
+  // ===========================================================================
+  const MESH_TRACK = [[0,4.0000,0.0000],[0.5,3.9999,0.0041],[1,3.9994,0.0205],[1.5,3.9985,0.0443],[2,3.9971,0.0713],[2.5,3.9952,0.0997],[3,3.9929,0.1285],[3.5,3.9901,0.1576],[4,3.9869,0.1872],[4.5,3.9833,0.2173],[5,3.9793,0.2477],[5.5,3.9749,0.2782],[6,3.9700,0.3088],[6.5,3.9648,0.3394],[7,3.9592,0.3702],[7.5,3.9532,0.4012],[8,3.9470,0.4326],[8.5,3.9407,0.4643],[9,3.9344,0.4965],[9.5,3.9283,0.5291],[10,3.9222,0.5622],[10.5,3.9159,0.5956],[11,3.9090,0.6294],[11.5,3.9012,0.6634],[12,3.8922,0.6975],[12.5,3.8818,0.7317],[13,3.8703,0.7658],[13.5,3.8576,0.7998],[14,3.8441,0.8338],[14.5,3.8299,0.8678],[15,3.8151,0.9017],[15.5,3.7998,0.9356],[16,3.7840,0.9695],[16.5,3.7677,1.0035],[17,3.7509,1.0375],[17.5,3.7336,1.0715],[18,3.7157,1.1056],[18.5,3.6973,1.1396],[19,3.6783,1.1736],[19.5,3.6586,1.2075],[20,3.6384,1.2412],[20.5,3.6175,1.2748],[21,3.5959,1.3083],[21.5,3.5737,1.3415],[22,3.5507,1.3745],[22.5,3.5271,1.4072],[23,3.5027,1.4397],[23.5,3.4777,1.4719],[24,3.4520,1.5039],[24.5,3.4256,1.5356],[25,3.3987,1.5671],[25.5,3.3712,1.5984],[26,3.3431,1.6294],[26.5,3.3144,1.6602],[27,3.2850,1.6908],[27.5,3.2551,1.7210],[28,3.2245,1.7510],[28.5,3.1932,1.7807],[29,3.1612,1.8101],[29.5,3.1287,1.8391],[30,3.0954,1.8677],[30.5,3.0615,1.8960],[31,3.0270,1.9238],[31.5,2.9919,1.9512],[32,2.9560,1.9782],[32.5,2.9196,2.0048],[33,2.8825,2.0308],[33.5,2.8448,2.0565],[34,2.8064,2.0816],[34.5,2.7675,2.1062],[35,2.7279,2.1303],[35.5,2.6877,2.1540],[36,2.6468,2.1771],[36.5,2.6054,2.1996],[37,2.5633,2.2216],[37.5,2.5206,2.2430],[38,2.4773,2.2638],[38.5,2.4334,2.2840],[39,2.3888,2.3036],[39.5,2.3437,2.3225],[40,2.2979,2.3408],[40.5,2.2515,2.3583],[41,2.2046,2.3752],[41.5,2.1571,2.3914],[42,2.1090,2.4068],[42.5,2.0603,2.4215],[43,2.0110,2.4353],[43.5,1.9612,2.4484],[44,1.9109,2.4607],[44.5,1.8600,2.4721],[45,1.8085,2.4827],[45.5,1.7566,2.4924],[46,1.7041,2.5012],[46.5,1.6511,2.5090],[47,1.5976,2.5159],[47.5,1.5437,2.5219],[48,1.4892,2.5268],[48.5,1.4343,2.5308],[49,1.3790,2.5337],[49.5,1.3232,2.5355],[50,1.2670,2.5362],[50.5,1.2104,2.5358],[51,1.1535,2.5343],[51.5,1.0962,2.5316],[52,1.0385,2.5277],[52.5,0.9805,2.5225],[53,0.9223,2.5162],[53.5,0.8637,2.5085],[54,0.8049,2.4995],[54.5,0.7459,2.4891],[55,0.6868,2.4774],[55.5,0.6274,2.4643],[56,0.5680,2.4497],[56.5,0.5084,2.4337],[57,0.4488,2.4162],[57.5,0.3892,2.3971],[58,0.3297,2.3765],[58.5,0.2702,2.3543],[59,0.2109,2.3304],[59.5,0.1517,2.3050],[60,0.0928,2.2778],[60.5,0.0341,2.2489],[61,-0.0242,2.2183],[61.5,-0.0821,2.1858],[62,-0.1395,2.1516],[62.5,-0.1963,2.1156],[63,-0.2526,2.0777],[63.5,-0.3081,2.0379],[64,-0.3628,1.9963],[64.5,-0.4166,1.9526],[65,-0.4695,1.9071],[65.5,-0.5212,1.8596],[66,-0.5718,1.8101],[66.5,-0.6211,1.7587],[67,-0.6689,1.7052],[67.5,-0.7152,1.6499],[68,-0.7598,1.5925],[68.5,-0.8027,1.5332],[69,-0.8435,1.4720],[69.5,-0.8823,1.4089],[70,-0.9187,1.3439],[70.5,-0.9528,1.2772],[71,-0.9842,1.2087],[71.5,-1.0130,1.1386],[72,-1.0387,1.0669],[72.5,-1.0613,0.9937],[73,-1.0805,0.9192],[73.5,-1.0963,0.8436],[74,-1.1083,0.7670],[74.5,-1.1164,0.6895],[75,-1.1204,0.6115],[75.5,-1.1201,0.5332],[76,-1.1154,0.4547],[76.5,-1.1060,0.3766],[77,-1.0920,0.2990],[77.5,-1.0728,0.2224],[78,-1.0489,0.1472],[78.5,-1.0197,0.0739],[79,-0.9855,0.0029],[79.5,-0.9463,-0.0653],[80,-0.9020,-0.1301],[80.5,-0.8530,-0.1909],[81,-0.7993,-0.2471],[81.5,-0.7414,-0.2982],[82,-0.6796,-0.3434],[82.5,-0.6146,-0.3825],[83,-0.5468,-0.4145],[83.5,-0.4772,-0.4394],[84,-0.4064,-0.4563],[84.5,-0.3357,-0.4654],[85,-0.2659,-0.4663],[85.5,-0.1983,-0.4594],[86,-0.1340,-0.4447],[86.5,-0.0742,-0.4228],[87,-0.0199,-0.3945],[87.5,0.0278,-0.3607],[88,0.0684,-0.3227],[88.5,0.1011,-0.2816],[89,0.1260,-0.2390],[89.5,0.1427,-0.1963],[90,0.1521,-0.1548],[90.5,0.1545,-0.1159],[91,0.1510,-0.0803],[91.5,0.1426,-0.0491],[92,0.1304,-0.0225],[92.5,0.1157,-0.0010],[93,0.0995,0.0157],[93.5,0.0828,0.0278],[94,0.0665,0.0357],[94.5,0.0512,0.0401],[95,0.0374,0.0415],[95.5,0.0254,0.0407],[96,0.0154,0.0381],[96.5,0.0072,0.0344],[97,0.0009,0.0300],[97.5,-0.0038,0.0254],[98,-0.0071,0.0207],[98.5,-0.0091,0.0164],[99,-0.0101,0.0124],[99.5,-0.0104,0.0088],[100,-0.0101,0.0059],[100.5,-0.0093,0.0034],[101,-0.0084,0.0014],[101.5,-0.0072,-0.0000],[102,-0.0061,-0.0011],[102.5,-0.0049,-0.0019],[103,-0.0038,-0.0023],[103.5,-0.0029,-0.0025],[104,-0.0020,-0.0025],[104.5,-0.0013,-0.0024],[105,-0.0007,-0.0022],[105.5,-0.0003,-0.0020],[106,0.0001,-0.0017],[106.5,0.0003,-0.0014],[107,0.0005,-0.0011],[107.5,0.0006,-0.0009],[108,0.0006,-0.0006],[108.5,0.0006,-0.0004],[109,0.0006,-0.0003],[109.5,0.0005,-0.0001],[110,0.0005,-0.0000]];
+  const MESH_REGRIDS = [[0.00,4.0000,0.0000],[2.95,3.9931,0.1259],[4.92,3.9800,0.2430],[6.89,3.9604,0.3636],[8.86,3.9362,0.4876],[10.63,3.9141,0.6046],[12.41,3.8839,0.7252],[14.18,3.8391,0.8460],[15.75,3.7919,0.9528],[17.33,3.7396,1.0599],[18.90,3.6819,1.1671],[20.48,3.6183,1.2735],[22.06,3.5482,1.3781],[23.63,3.4710,1.4803],[25.21,3.3874,1.5800],[26.58,3.3095,1.6654],[27.96,3.2267,1.7488],[29.34,3.1391,1.8299],[30.72,3.0464,1.9083],[32.10,2.9489,1.9835],[33.48,2.8465,2.0553],[34.86,2.7394,2.1234],[36.23,2.6275,2.1877],[37.61,2.5110,2.2477],[38.99,2.3897,2.3032],[40.17,2.2820,2.3469],[41.35,2.1710,2.3867],[42.54,2.0568,2.4225],[43.72,1.9395,2.4539],[44.90,1.8190,2.4806],[46.08,1.6957,2.5025],[47.26,1.5695,2.5192],[48.44,1.4406,2.5304],[49.62,1.3093,2.5358],[50.81,1.1756,2.5350],[51.99,1.0399,2.5278],[53.17,0.9025,2.5137],[54.15,0.7868,2.4965],[55.14,0.6703,2.4739],[56.12,0.5533,2.4459],[57.11,0.4360,2.4122],[58.09,0.3187,2.3725],[59.08,0.2017,2.3267],[60.06,0.0855,2.2743],[61.05,-0.0296,2.2154],[62.03,-0.1430,2.1495],[63.02,-0.2543,2.0765],[64.00,-0.3628,1.9963],[64.98,-0.4679,1.9085],[65.97,-0.5687,1.8132],[66.95,-0.6646,1.7103],[67.94,-0.7545,1.5997],[68.73,-0.8214,1.5058],[69.51,-0.8833,1.4071],[70.30,-0.9396,1.3039],[71.09,-0.9896,1.1963],[71.88,-1.0327,1.0847],[72.66,-1.0680,0.9694],[73.45,-1.0950,0.8509],[74.24,-1.1127,0.7299],[75.03,-1.1205,0.6072],[75.82,-1.1177,0.4837],[76.60,-1.1036,0.3605],[77.39,-1.0775,0.2391],[78.18,-1.0391,0.1208],[78.97,-0.9881,0.0076],[79.75,-0.9245,-0.0987],[80.54,-0.8488,-0.1958],[81.33,-0.7617,-0.2814],[82.12,-0.6648,-0.3532],[82.90,-0.5599,-0.4090],[83.69,-0.4500,-0.4468],[84.68,-0.3108,-0.4667],[85.66,-0.1771,-0.4555],[86.65,-0.0577,-0.4152],[87.63,0.0393,-0.3512],[88.81,0.1176,-0.2551],[90.19,0.1538,-0.1396],[91.96,0.1314,-0.0243],[95.11,0.0345,0.0415]];
+  const MESH_AH = [[0,0.162],[1,0.201],[2,0.242],[3,0.280],[4,0.304],[5,0.312],[6,0.309],[7,0.304],[8,0.299],[9,0.297],[10,0.297],[11,0.298],[12,0.301],[13,0.303],[14,0.303],[15,0.303],[16,0.302],[17,0.302],[18,0.301],[19,0.301],[20,0.302],[21,0.302],[22,0.303],[23,0.303],[24,0.303],[25,0.303],[26,0.303],[27,0.303],[28,0.303],[29,0.303],[30,0.303],[31,0.303],[32,0.303],[33,0.303],[34,0.303],[35,0.302],[36,0.302],[37,0.302],[38,0.302],[39,0.302],[40,0.302],[41,0.302],[42,0.301],[43,0.301],[44,0.301],[45,0.301],[46,0.300],[47,0.300],[48,0.300],[49,0.299],[50,0.299],[51,0.299],[52,0.298],[53,0.298],[54,0.297],[55,0.297],[56,0.296],[57,0.295],[58,0.295],[59,0.294],[60,0.293],[61,0.292],[62,0.291],[63,0.290],[64,0.289],[65,0.288],[66,0.286],[67,0.285],[68,0.283],[69,0.282],[70,0.280],[71,0.278],[72,0.275],[73,0.273],[74,0.270],[75,0.267],[76,0.263],[77,0.259],[78,0.254],[79,0.249],[80,0.244],[81,0.237],[82,0.230],[83,0.221],[84,0.211],[85,0.200],[86,0.187],[87,0.172],[88,0.155]];
+  const MESH_OUTER = 1043.69;         // M, half-width of level 0 as printed (sets the zoomed-out view)
+  const MESH_DX0 = 256 / 65;          // M, box size on level 0
+  const MESH_LEVELS = 9;              // levels 0 … 8
+  const MESH_HORIZON_MERGED = 0.55;   // M, the merged black hole's horizon radius
+  const MESH_MERGE_START = 84;        // M, merged horizon starts to fade in (puncture separation ≈ 1.3 M); an estimate
+  const MESH_MERGE_END = 88.5;        // M, individual horizons gone (ah1 loses them at 88.6 M)
+  const MESH_T_END = 110;             // M, end of the time slider
+  const MESH_PLAY_SPEED = 9;          // M of simulation time per second of animation
+  const MESH_LINE_DEVPX = 3;          // screen pixels; closer than this, a level's lines are replaced by their average tint
+  const MESH_LINE_ALPHA = 0.9;        // opacity of grid lines
+  // Boxes are drawn this many times bigger than the real dx so they are visible. One factor for
+  // every level, so the 2:1 ratio between levels is kept; regions and horizons stay true size.
+  // (Each real level box is ~284 of its own cells across, which is below screen resolution.)
+  const MESH_DX_SCALE = 16;
+  let meshZoom = 7;          // zoom slider value z; magnification = 2^z. Starts where both black holes and their finest boxes are in view, as Play does
+  let meshT = 0;             // M, simulation time shown
+  let meshPlaying = false;
+  let meshPlayFrom = 0;      // s, page time when play was pressed
+  let meshPlayT0 = 0;        // M, simulation time when play was pressed
+  let meshLastText = "";
+  let ms = null;
+
+  // Linear interpolation of column col in a table of rows [t, …], sorted by t.
+  function tableAt(table, t, col) {
+    if (t <= table[0][0]) return table[0][col];
+    for (let i = 1; i < table.length; i++) {
+      if (table[i][0] >= t) {
+        const u = (t - table[i - 1][0]) / (table[i][0] - table[i - 1][0]);
+        return lerp(table[i - 1][col], table[i][col], u);
+      }
+    }
+    return table[table.length - 1][col];
+  }
+
+  // Box centre at time t: the last regrid at or before t. The boxes jump; they don't glide.
+  function regridAt(t) {
+    let found = MESH_REGRIDS[0];
+    for (const row of MESH_REGRIDS) {
+      if (row[0] > t) break;
+      found = row;
+    }
+    return found;
+  }
+
+  // Level L's region at time t, as rectangles [x0, y0, x1, y1] in M: the box around
+  // puncture 0 and its 180° rotation around puncture 1. Where they overlap, the level is their union.
+  function meshRects(L, t) {
+    if (L === 0) return [[-MESH_OUTER, -MESH_OUTER, MESH_OUTER, MESH_OUTER]];
+    const dx = MESH_DX0 / Math.pow(2, L);
+    const parentDx = 2 * dx;
+    const half = 512 / Math.pow(2, L) + 12 * dx;  // CarpetRegrid2 radius + 12 buffer points
+    const centre = regridAt(t);
+    function snap(v) { return Math.round(v / parentDx) * parentDx; }
+    const box = [snap(centre[1] - half), snap(centre[2] - half), snap(centre[1] + half), snap(centre[2] + half)];
+    const rotated = [-box[2], -box[3], -box[0], -box[1]];
+    return [rotated, box];
+  }
+
+  // Outline of a union of rectangles: each rectangle's edges, minus the stretches that run
+  // through the inside of another rectangle. sx, sy map M to screen.
+  function strokeUnion(c, rects, sx, sy) {
+    c.beginPath();
+    for (let i = 0; i < rects.length; i++) {
+      const a = rects[i];
+      // Each edge: [fixed coordinate, from, to, runs along x?]
+      const edges = [
+        [a[1], a[0], a[2], true],
+        [a[3], a[0], a[2], true],
+        [a[0], a[1], a[3], false],
+        [a[2], a[1], a[3], false],
+      ];
+      for (const e of edges) {
+        let pieces = [[e[1], e[2]]];
+        for (let j = 0; j < rects.length; j++) {
+          if (j === i) continue;
+          const b = rects[j];
+          // Range of b across the edge (is the edge inside b?) and along it (which stretch to cut).
+          let acrossLo = b[0];
+          let acrossHi = b[2];
+          let alongLo = b[1];
+          let alongHi = b[3];
+          if (e[3]) {
+            acrossLo = b[1];
+            acrossHi = b[3];
+            alongLo = b[0];
+            alongHi = b[2];
+          }
+          if (!(acrossLo < e[0] && e[0] < acrossHi)) continue;
+          const kept = [];
+          for (const p of pieces) {
+            if (p[0] < alongLo) kept.push([p[0], Math.min(p[1], alongLo)]);
+            if (p[1] > alongHi) kept.push([Math.max(p[0], alongHi), p[1]]);
+          }
+          pieces = kept;
+        }
+        for (const p of pieces) {
+          if (e[3]) {
+            c.moveTo(sx(p[0]), sy(e[0]));
+            c.lineTo(sx(p[1]), sy(e[0]));
+          } else {
+            c.moveTo(sx(e[0]), sy(p[0]));
+            c.lineTo(sx(e[0]), sy(p[1]));
+          }
+        }
+      }
+    }
+    c.stroke();
+  }
+
+  // Two significant figures for the readout (2,521 → 2,500).
+  function twoFigures(x) { return Number(x.toPrecision(2)).toLocaleString(); }
+
+  const meshEl = document.getElementById("mesh");
+  const meshCanvas = document.getElementById("mesh-canvas");
+  const meshReadout = document.getElementById("mesh-readout");
+  const zoomSlider = document.getElementById("mesh-zoom");
+  const timeSlider = document.getElementById("mesh-time");
+  const meshPlayBtn = document.getElementById("mesh-play");
+  const meshScene = addScene(meshEl, {
+    layout: function () {
+      // The readout below the picture changes length as time runs, which resizes the widget.
+      // Refit (and so clear) the canvas only when the canvas itself changed size.
+      const box = meshCanvas.getBoundingClientRect();
+      if (ms !== null && Math.abs(box.width - ms.w) < 0.5 && Math.abs(box.height - ms.h) < 0.5) return;
+      ms = fitCanvas(meshCanvas);
+    },
+    draw: function (pageT, col) {
+      if (meshPlaying) {
+        meshT = Math.min(MESH_T_END, meshPlayT0 + (pageT - meshPlayFrom) * MESH_PLAY_SPEED);
+        timeSlider.value = String(meshT);
+        if (meshT >= MESH_T_END) {
+          meshPlaying = false;
+          meshPlayBtn.textContent = "Play again";
+        }
+      }
+      const t = meshT;
+      const c = ms.ctx;
+      const w = ms.w;
+      const h = ms.h;
+      c.clearRect(0, 0, w, h);
+      const ppu = ((0.5 * Math.min(w, h) * 0.95) / MESH_OUTER) * Math.pow(2, meshZoom);  // screen px per M
+
+      // Puncture 0 now (puncture 1 is at minus this). Zoomed far in, the view follows puncture 0.
+      const p0x = tableAt(MESH_TRACK, t, 1);
+      const p0y = tableAt(MESH_TRACK, t, 2);
+      const follow = smoothstep(7.5, 9, meshZoom);
+      const fx = follow * p0x;
+      const fy = follow * p0y;
+      function sx(x) { return w / 2 + (x - fx) * ppu; }
+      function sy(y) { return h / 2 - (y - fy) * ppu; }  // y up, as in the simulation
+      // The part of the plane in view, in M.
+      const vx0 = fx - w / 2 / ppu;
+      const vx1 = fx + w / 2 / ppu;
+      const vy0 = fy - h / 2 / ppu;
+      const vy1 = fy + h / 2 / ppu;
+
+      // Each level, coarse to fine, repaints its own region: blank first, then its grid at
+      // MESH_DX_SCALE × its true spacing. That grid already contains every coarser line, because
+      // each level's lines sit on multiples of its drawn spacing from the origin, and the drawn
+      // spacing halves per level just as dx does.
+      // Lines are one screen pixel wide. Where they would be under MESH_LINE_DEVPX screen pixels
+      // apart, the region gets the tint those lines average to over each pixel instead: lines of
+      // width w and spacing s cover min(1, w/s) of the area in each direction, so the grid covers
+      // 1 − (1 − min(1, w/s))². Below one pixel per box, a screen cannot show more than that.
+      let finest = -1;  // finest level drawn as separate lines
+      for (let L = 0; L < MESH_LEVELS; L++) {
+        const dx = (MESH_DX_SCALE * MESH_DX0) / Math.pow(2, L);  // drawn box size, M (real dx × MESH_DX_SCALE)
+        const spacing = dx * ppu * ms.dpr;  // line spacing in screen pixels
+        const rects = meshRects(L, t);
+        // The level's bounding box, cut down to the view.
+        let bx0 = Infinity;
+        let bx1 = -Infinity;
+        let by0 = Infinity;
+        let by1 = -Infinity;
+        for (const r of rects) {
+          bx0 = Math.min(bx0, r[0]);
+          by0 = Math.min(by0, r[1]);
+          bx1 = Math.max(bx1, r[2]);
+          by1 = Math.max(by1, r[3]);
+        }
+        bx0 = Math.max(bx0, vx0);
+        bx1 = Math.min(bx1, vx1);
+        by0 = Math.max(by0, vy0);
+        by1 = Math.min(by1, vy1);
+        if (bx0 >= bx1 || by0 >= by1) continue;  // level is out of view
+        c.save();
+        c.beginPath();
+        for (const r of rects) c.rect(sx(r[0]), sy(r[3]), (r[2] - r[0]) * ppu, (r[3] - r[1]) * ppu);
+        c.fillStyle = col.surface;
+        c.fill();
+        if (spacing < MESH_LINE_DEVPX) {
+          const f = Math.min(1, 1 / spacing);  // one direction's coverage, with w = 1 screen pixel
+          c.fillStyle = col.grid;
+          c.globalAlpha = MESH_LINE_ALPHA * (1 - (1 - f) * (1 - f));
+          c.fill();
+        } else {
+          c.clip();
+          finest = L;
+          c.strokeStyle = col.grid;
+          c.lineWidth = 1 / ms.dpr;  // one screen pixel
+          c.globalAlpha = MESH_LINE_ALPHA;
+          c.beginPath();
+          // Lines sit on multiples of dx from the origin, so every level's lines line up with the next level's.
+          for (let k = Math.ceil(bx0 / dx); k * dx <= bx1; k++) {
+            const X = sx(k * dx);
+            c.moveTo(X, sy(by0));
+            c.lineTo(X, sy(by1));
+          }
+          for (let k = Math.ceil(by0 / dx); k * dx <= by1; k++) {
+            const Y = sy(k * dx);
+            c.moveTo(sx(bx0), Y);
+            c.lineTo(sx(bx1), Y);
+          }
+          c.stroke();
+        }
+        c.restore();
+      }
+
+      // Outline each level's region (the union of its two boxes).
+      c.strokeStyle = col.wave;
+      c.lineWidth = 1.25;
+      for (let L = 1; L < MESH_LEVELS; L++) {
+        const rects = meshRects(L, t);
+        if ((rects[1][2] - rects[1][0]) * ppu < 4) continue;
+        strokeUnion(c, rects, sx, sy);
+      }
+
+      // Horizons, to scale and slightly see-through (the grid carries on inside). Over the
+      // merger the two individual horizons fade out as the merged one fades in.
+      const mergeU = smoothstep(MESH_MERGE_START, MESH_MERGE_END, t);
+      const rEach = tableAt(MESH_AH, t, 1);  // M, each black hole's horizon radius
+      const holes = [];                       // [x, y, radius in M, opacity]
+      if (mergeU < 1) {
+        holes.push([p0x, p0y, rEach, 1 - mergeU]);
+        holes.push([-p0x, -p0y, rEach, 1 - mergeU]);
+      }
+      if (mergeU > 0) holes.push([0, 0, MESH_HORIZON_MERGED, mergeU]);
+      for (const hole of holes) {
+        const X = sx(hole[0]);
+        const Y = sy(hole[1]);
+        const r = hole[2] * ppu;
+        c.save();
+        if (r >= 1) {
+          c.globalAlpha = 0.85 * hole[3];
+          c.fillStyle = col.hole;
+          c.beginPath();
+          c.arc(X, Y, r, 0, TAU);
+          c.fill();
+          c.globalAlpha = hole[3];
+          c.shadowColor = col.accent;
+          c.shadowBlur = 6;
+          c.strokeStyle = col.accent;
+          c.lineWidth = 2;
+          c.stroke();
+        }
+        if (r < 3) {
+          // Too small to see: circle where it is.
+          c.globalAlpha = hole[3];
+          c.strokeStyle = col.accent;
+          c.lineWidth = 1.5;
+          c.beginPath();
+          c.arc(X, Y, 8, 0, TAU);
+          c.stroke();
+        }
+        c.restore();
+      }
+
+      // Readout in plain words: what is happening, then what the zoom shows. (The simulation
+      // time t, in M, and the box counts are left out on purpose: readers found them confusing.)
+      const merged = mergeU >= 0.5;
+      let holeR = rEach;
+      if (merged) holeR = MESH_HORIZON_MERGED;
+      const hr = holeR * ppu;
+      const mag = twoFigures(Math.pow(2, meshZoom));
+      let stage = "";
+      if (t > 0.05) stage = "The black holes spiral in, and their boxes jump along after them.";
+      if (t >= 70) stage = "Closing in fast.";
+      if (t >= MESH_MERGE_START) stage = "The crash: two edges become one.";
+      if (t >= 96) stage = "After the crash, the boxes settle on the merged black hole.";
+      let detail;
+      if (meshZoom < 0.5 && merged) {
+        detail = "The whole simulation. The merged black hole (circled) is too small to see from here.";
+      } else if (meshZoom < 0.5) {
+        detail = "The whole simulation. The black holes (circled) are too small to see from here. Zoom in, or press play.";
+      } else if (hr < 3) {
+        detail = "Zoomed in " + mag + " times. The black holes (circled) are still too small to see.";
+      } else {
+        // How many black holes are in the picture decides "circle is" versus "circles are".
+        let inView = 0;
+        for (const hole of holes) {
+          if (hole[3] >= 0.5 && hole[0] + hole[2] > vx0 && hole[0] - hole[2] < vx1 && hole[1] + hole[2] > vy0 && hole[1] - hole[2] < vy1) inView += 1;
+        }
+        let edge = "The black circles are the black holes, at their true size.";
+        if (inView === 1) edge = "The black circle is a black hole, at its true size.";
+        detail = edge + " The smallest boxes crowd around them, where things change fastest. Zoomed in " + mag + " times.";
+      }
+      let text = detail;
+      if (stage) text = stage + " " + detail;
+      if (text !== meshLastText) {
+        meshReadout.textContent = text;
+        meshLastText = text;
+      }
+    },
+    moving: function () { return meshPlaying; },
+  });
+
+  zoomSlider.addEventListener("input", function () {
+    meshZoom = Number(zoomSlider.value);
+    refresh(meshScene);
+  });
+  timeSlider.addEventListener("input", function () {
+    meshPlaying = false;
+    meshPlayBtn.textContent = "Play the merger";
+    meshT = Number(timeSlider.value);
+    refresh(meshScene);
+  });
+  meshPlayBtn.addEventListener("click", function () {
+    if (meshPlaying) {
+      meshPlaying = false;
+      meshPlayBtn.textContent = "Play the merger";
+      refresh(meshScene);
+      return;
+    }
+    if (meshT >= MESH_T_END) meshT = 0;
+    // Start from a zoom where both black holes and their finest boxes are in view (about ±8.6 M).
+    if (meshZoom < 5 || meshZoom > 9.5) {
+      meshZoom = 7;
+      zoomSlider.value = "7";
+    }
+    meshPlaying = true;
+    meshPlayFrom = now();
+    meshPlayT0 = meshT;
+    meshPlayBtn.textContent = "Pause";
+    refresh(meshScene);
+  });
+
+  // ===========================================================================
+  // Compute race. One of my recent runs: 256 processors × 95.6 hours
+  // = 24,474 processor-hours ≈ 4 days. An 8-processor laptop doing the same
+  // work: 24,474 / 8 = 3,059 hours ≈ 127 days.
+  // ===========================================================================
+  const RACE_SUPER_DAYS = 4;
+  const RACE_LAPTOP_DAYS = 127;
+  // Days tick by at one steady pace, so the two finish times keep their true 4 : 127 ratio.
+  const RACE_DAYS_PER_SECOND = 10;
+  const RACE_DUR = RACE_LAPTOP_DAYS / RACE_DAYS_PER_SECOND;  // s, 12.7 for the whole race
+  const daysA = document.getElementById("days-a");
+  const daysB = document.getElementById("days-b");
+  const raceA = document.getElementById("race-a");
+  const raceB = document.getElementById("race-b");
+  const raceClock = document.getElementById("race-clock");
+  for (let i = 0; i < RACE_SUPER_DAYS; i++) daysA.appendChild(document.createElement("span")).className = "day";
+  for (let i = 0; i < RACE_LAPTOP_DAYS; i++) daysB.appendChild(document.createElement("span")).className = "day";
+  const squaresA = daysA.children;
+  const squaresB = daysB.children;
+  let raceT0 = null;
+  let raceSettled = true;   // as squeezeSettled: animate until the end frame is drawn
+  let raceShown = -1;
+  const raceScene = addScene(document.getElementById("race"), {
+    layout: function () {},
+    draw: function (t) {
+      if (raceT0 === null) return;
+      const u = clamp01((t - raceT0) / RACE_DUR);
+      if (u >= 1) raceSettled = true;
+      const day = Math.floor(RACE_LAPTOP_DAYS * u);
+      if (day === raceShown) return;
+      raceShown = day;
+      for (let i = 0; i < squaresA.length; i++) squaresA[i].classList.toggle("empty", i >= day);
+      for (let i = 0; i < squaresB.length; i++) squaresB[i].classList.toggle("empty", i >= day);
+      raceA.textContent = day >= RACE_SUPER_DAYS ? "Done: 4 days" : "Working…";
+      raceB.textContent = day >= RACE_LAPTOP_DAYS ? "Done: 127 days (about 4 months)" : "Working…";
+      raceClock.textContent = day >= RACE_LAPTOP_DAYS ? "Same job. 4 days versus 127." : "Day " + day;
+    },
+    moving: function () { return raceT0 !== null && !raceSettled; },
+  });
+  document.getElementById("race-go").addEventListener("click", function () {
+    raceT0 = now();
+    raceSettled = false;
+    raceShown = -1;
+    refresh(raceScene);
+  });
+
+  // ===========================================================================
+  // Match game: line up "my formula" with "the supercomputer".
+  // Both are BOB-style signals around the crash: strength sech(t / fade), which
+  // peaks at the crash as in the BOB model, and a pitch that rises from
+  // pitch/2 to pitch through the peak. The game is to find the supercomputer's
+  // pitch and fade. Signals are complex, turning as e^{−i·phase}.
+  // ===========================================================================
+  const MM_T0 = -40;        // start of the time window (arbitrary units; 0 = the crash)
+  const MM_T1 = 60;         // end of the time window
+  const MM_N = 600;         // samples
+  const MM_TRUE_PITCH = 1.0;  // the supercomputer's answer
+  const MM_TRUE_FADE = 6.0;
+  const MM_GOAL = 0.01;
+  // Checked offline: mismatch is under 0.01 for pitch 0.966–1.034 and fade 4.85–7.40;
+  // the sliders start at (0.8, 3.5), mismatch 0.20.
+
+  function bobWave(pitch, fade) {
+    const re = new Float64Array(MM_N);
+    const im = new Float64Array(MM_N);
+    const dt = (MM_T1 - MM_T0) / (MM_N - 1);
+    let phase = 0;
+    for (let i = 0; i < MM_N; i++) {
+      const t = MM_T0 + i * dt;
+      const amp = 1 / Math.cosh(t / fade);
+      const omega = pitch * (0.5 + 0.25 * (1 + Math.tanh(t / fade)));
+      phase += omega * dt;
+      re[i] = amp * Math.cos(phase);
+      im[i] = -amp * Math.sin(phase);
+    }
+    return { re: re, im: im };
+  }
+
+  // Mismatch = 1 − |⟨a,b⟩| / √(⟨a,a⟩⟨b,b⟩), with the complex inner product ⟨a,b⟩ = Σ a·conj(b).
+  // Taking |·| lines up the overall phase for free, as in real waveform comparisons.
+  function mismatch(a, b) {
+    let abRe = 0;
+    let abIm = 0;
+    let aa = 0;
+    let bb = 0;
+    for (let i = 0; i < MM_N; i++) {
+      abRe += a.re[i] * b.re[i] + a.im[i] * b.im[i];
+      abIm += a.im[i] * b.re[i] - a.re[i] * b.im[i];
+      aa += a.re[i] * a.re[i] + a.im[i] * a.im[i];
+      bb += b.re[i] * b.re[i] + b.im[i] * b.im[i];
+    }
+    return Math.max(0, 1 - Math.hypot(abRe, abIm) / Math.sqrt(aa * bb));  // max(0, …) only trims round-off below zero
+  }
+
+  const mmTarget = bobWave(MM_TRUE_PITCH, MM_TRUE_FADE);
+  const pitchInput = document.getElementById("mm-pitch");
+  const fadeInput = document.getElementById("mm-fade");
+  const mmNum = document.getElementById("mm-num");
+  const mmFill = document.getElementById("mm-fill");
+  const mmMsg = document.getElementById("mm-msg");
+  let mmModel = null;
+  let mt = null;
+
+  function updateMatch() {
+    mmModel = bobWave(Number(pitchInput.value), Number(fadeInput.value));
+    const mm = mismatch(mmTarget, mmModel);
+    mmNum.textContent = mm.toFixed(3);
+    // Bar runs on a log scale: empty at mismatch 1, full at 0.001; the goal mark (0.01) sits at 2/3.
+    mmFill.style.width = (100 * clamp01(-Math.log10(Math.max(mm, 0.001)) / 3)) + "%";
+    if (mm < MM_GOAL) mmMsg.textContent = "Matched! That’s what I try to do for every kind of collision.";
+    else if (mm < 0.05) mmMsg.textContent = "Close! Fine-tune the pitch and fade.";
+    else if (mm < 0.2) mmMsg.textContent = "Getting warmer.";
+    else mmMsg.textContent = "Way off. Start with the pitch.";
+    refresh(matchScene);
+  }
+
+  const matchScene = addScene(document.getElementById("match"), {
+    layout: function () { mt = fitCanvas(document.getElementById("match-canvas")); },
+    draw: function (t, col) {
+      const c = mt.ctx;
+      const w = mt.w;
+      const h = mt.h;
+      c.clearRect(0, 0, w, h);
+      const pad = 6;
+      function xOf(i) { return pad + (i / (MM_N - 1)) * (w - 2 * pad); }
+      const mid = h / 2 + 6;
+      const scale = h / 2 - 14;  // px for a value of 1, the target's biggest swing
+      // Mark the crash.
+      const xCrash = xOf((-MM_T0 / (MM_T1 - MM_T0)) * (MM_N - 1));
+      c.strokeStyle = col.rule;
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(xCrash, 14);
+      c.lineTo(xCrash, h);
+      c.stroke();
+      c.fillStyle = col.soft;
+      c.font = MONO_FONT;
+      c.textAlign = "center";
+      c.textBaseline = "top";
+      c.fillText("crash", xCrash, 0);
+      // Supercomputer (solid), then formula (dashed) on top. Real parts only.
+      c.lineJoin = "round";
+      c.lineWidth = 2;
+      c.strokeStyle = col.wave;
+      c.beginPath();
+      for (let i = 0; i < MM_N; i++) {
+        if (i === 0) c.moveTo(xOf(i), mid - scale * mmTarget.re[i]);
+        else c.lineTo(xOf(i), mid - scale * mmTarget.re[i]);
+      }
+      c.stroke();
+      c.strokeStyle = col.accent;
+      c.setLineDash([6, 4]);
+      c.beginPath();
+      for (let i = 0; i < MM_N; i++) {
+        if (i === 0) c.moveTo(xOf(i), mid - scale * mmModel.re[i]);
+        else c.lineTo(xOf(i), mid - scale * mmModel.re[i]);
+      }
+      c.stroke();
+      c.setLineDash([]);
+    },
+    moving: function () { return false; },
+  });
+  pitchInput.addEventListener("input", updateMatch);
+  fadeInput.addEventListener("input", updateMatch);
+  document.getElementById("mm-answer").addEventListener("click", function () {
+    pitchInput.value = String(MM_TRUE_PITCH);
+    fadeInput.value = String(MM_TRUE_FADE);
+    updateMatch();
+  });
+  updateMatch();
+
+  // ===========================================================================
+  // Copy the note for Claude
+  // ===========================================================================
+  const copyBtn = document.getElementById("copy");
+  const promptEl = document.getElementById("prompt");
+  const copyStatus = document.getElementById("copy-status");
+  copyBtn.addEventListener("click", async function () {
+    const text = promptEl.textContent.replace(/\s+/g, " ").trim();
+    try {
+      await navigator.clipboard.writeText(text);
+      copyStatus.textContent = "Copied. Now open Claude, paste it, and add your question.";
+    } catch (err) {
+      // Some apps block copy buttons. Highlight the note so it can be copied by hand.
+      const range = document.createRange();
+      range.selectNodeContents(promptEl);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      copyStatus.textContent = "Your device didn’t allow the copy button, so the note is highlighted. Copy it the way you normally would.";
+    }
+  });
+})();
+</script>
+
+</html>

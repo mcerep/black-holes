@@ -380,7 +380,7 @@ footer {
   <header class="hero wrap">
     <p class="eyebrow">For my family</p>
     <h1>I study the ripples black holes make in space.</h1>
-    <p class="lede">In short: I crash black holes together on supercomputers, build faster formulas for the ripples they make, and study a faint hum from giant black holes across the universe. Press play to watch one collision.</p>
+    <p class="lede">In short: I simulate black holes merging on supercomputers, build faster formulas for the ripples they make, and study a faint hum from giant black holes across the universe. Press play to watch one collision.</p>
   </header>
 
   <figure class="stage wide" id="stage">
@@ -400,7 +400,7 @@ footer {
       <canvas id="sky" role="img" aria-label="Animation: two black holes circle each other, spiral closer and faster, merge into one, and send ripples across a grid that stands for space."></canvas>
       <p class="note">The grid is like graph paper drawn on space, so you can see it bend.</p>
     </div>
-    <canvas id="trace" role="img" aria-label="The ripple signal over time: small, slow wiggles that grow bigger and faster, a peak at the crash, then a fading ring."></canvas>
+    <canvas id="trace" role="img" aria-label="The ripple signal over time: small, slow wiggles that grow bigger and faster, a peak at the merger, then a fading ring."></canvas>
     <div class="stage-foot">
       <button id="play" class="play" type="button">
         <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 0.8 9 5 1.5 9.2Z"></path></svg>
@@ -408,7 +408,7 @@ footer {
       </button>
       <ol class="acts" id="acts" aria-label="The three acts of a collision">
         <li data-act="1"><span class="num">1</span>Spiral in</li>
-        <li data-act="2"><span class="num">2</span>Crash</li>
+        <li data-act="2"><span class="num">2</span>Merger</li>
         <li data-act="3"><span class="num">3</span>Ring down</li>
       </ol>
     </div>
@@ -457,8 +457,8 @@ footer {
         <p>LIGO caught its first in 2015, from two black holes that collided over a billion years ago. It won the 2017 Nobel Prize in Physics.</p>
         <div class="widget" id="ligo">
           <p class="w-readout">LIGO has two giant L-shaped detectors, one in Washington and one in Louisiana. A passing ripple stretches one arm of the L and squeezes the other, and lasers measure the change. This is what both recorded on September 14, 2015.</p>
-          <div class="legend"><span><i class="sw"></i>Washington detector</span><span><i class="sw l1"></i>Louisiana detector</span><span><i class="sw nr"></i>Thin line: a supercomputer simulation of this crash</span></div>
-          <canvas id="ligo-canvas" class="w-canvas h200" role="img" aria-label="The first gravitational wave ever detected, on September 14, 2015, as two wiggly lines from LIGO's detectors in Washington and Louisiana. Both grow faster and bigger, peak, and die away within about a fifth of a second, matching the thin line, a supercomputer simulation of the same crash."></canvas>
+          <div class="legend"><span><i class="sw"></i>Washington detector</span><span><i class="sw l1"></i>Louisiana detector</span><span><i class="sw nr"></i>Thin line: a supercomputer simulation of this merger</span></div>
+          <canvas id="ligo-canvas" class="w-canvas h200" role="img" aria-label="The first gravitational wave ever detected, on September 14, 2015, as two wiggly lines from LIGO's detectors in Washington and Louisiana. Both grow faster and bigger, peak, and die away within about a fifth of a second, matching the thin line, a supercomputer simulation of the same merger."></canvas>
           <div class="w-controls"><button type="button" class="btn small" id="ligo-play">Hear it</button></div>
           <p class="w-note">Up and down is the stretch. At its biggest, the 2.5-mile arms changed length by less than a hundredth of a proton’s width. Two detectors far apart saw the same thing, so it was real. The sound is the real recording, raised in pitch.</p>
         </div>
@@ -477,8 +477,8 @@ footer {
       </a>
       <a class="actcard" href="#act-2">
         <canvas aria-hidden="true"></canvas>
-        <span class="tag"><span class="num">2</span>Crash</span>
-        <span class="actcard-title">Crashing black holes on a supercomputer</span>
+        <span class="tag"><span class="num">2</span>Merger</span>
+        <span class="actcard-title">Merging black holes on a supercomputer</span>
       </a>
       <a class="actcard" href="#act-3">
         <canvas aria-hidden="true"></canvas>
@@ -521,10 +521,10 @@ footer {
     </article>
 
     <article class="project" id="act-2">
-      <p class="tag"><span class="num">2</span>Crash</p>
-      <h3>Crashing black holes on a supercomputer</h3>
-      <p class="act-line">In act two, the black holes crash and become one, in a fraction of a second.</p>
-      <p><strong>My part:</strong> crashing black holes together inside a supercomputer. My twist is that my black holes carry electric charge, the same stuff behind static electricity. Real ones probably carry very little, but nobody knows for sure.</p>
+      <p class="tag"><span class="num">2</span>Merger</p>
+      <h3>Merging black holes on a supercomputer</h3>
+      <p class="act-line">In act two, the black holes merge into one, in a fraction of a second.</p>
+      <p><strong>My part:</strong> simulating black hole mergers on a supercomputer. My twist is that my black holes carry electric charge, the same stuff behind static electricity. Real ones probably carry very little, but nobody knows for sure.</p>
       <p>Einstein’s equations for a collision are too tangled to solve with pencil and paper. Instead, a supercomputer chops space into boxes, like the pixels of a photo, and keeps track of how bent space is in each one. Then it steps everything forward in time, a sliver at a time. The boxes get smaller near the black holes, where things change fastest.</p>
       <div class="widget" id="mesh">
         <canvas id="mesh-canvas" class="w-canvas mesh-canvas" role="img" aria-label="Space divided into boxes, from one of my simulations: big boxes far away, smaller and smaller boxes nested around the black holes, whose edges are drawn as black circles. Press play to watch the boxes follow the black holes as they spiral together and merge."></canvas>
@@ -554,7 +554,7 @@ footer {
       </div>
       <aside class="analogy">
         <p class="label">Think of it like</p>
-        <p>Car crash tests. Engineers can’t learn everything about a crash from formulas, so they crash real cars and film them. I do the same with black holes, inside a computer.</p>
+        <p>Car crash tests. Engineers can’t learn everything about a crash from formulas, so they crash real cars and film them. I do the same with black hole mergers, inside a computer.</p>
       </aside>
     </article>
 
@@ -564,11 +564,11 @@ footer {
       <p class="act-line">In act three, the new black hole rings like a struck bell, then goes quiet.</p>
       <p><strong>My part:</strong> a shortcut formula that predicts the ringing in a split second, instead of days on a supercomputer.</p>
       <p>Detectors need a huge library of possible signals to compare against, and each supercomputer run takes days. The shortcut is a formula nicknamed BOB.</p>
-      <p>My job is making the formula match supercomputer crashes like the ones in act two. Try it yourself: find the right pitch and fade.</p>
+      <p>My job is making the formula match supercomputer simulations like the one in act two. Try it yourself: find the right pitch and fade.</p>
       <div class="widget" id="match">
         <p class="w-note">The solid line is the real ripple from my simulation in act two. Pitch is how fast my formula’s ringing wiggles; fade is how long it lasts. Slide them until the dashed line covers the solid one.</p>
         <div class="legend"><span><i class="sw"></i>Supercomputer (my run from act two)</span><span><i class="sw fit"></i>My formula</span></div>
-        <canvas id="match-canvas" class="w-canvas h190" role="img" aria-label="Two wiggly signals from just before the crash onward: the ripple from my supercomputer simulation, and my formula's guess."></canvas>
+        <canvas id="match-canvas" class="w-canvas h190" role="img" aria-label="Two wiggly signals from just before the merger onward: the ripple from my supercomputer simulation, and my formula's guess."></canvas>
         <div class="meter">
           <span class="meter-num" id="mm-num">0.000</span>
           <span class="meter-label">mismatch (0 = perfect match) · goal: under 0.01</span>
@@ -596,7 +596,7 @@ footer {
 
   <section class="short wrap" aria-labelledby="short-h">
     <p class="eyebrow" id="short-h">If someone asks what I do</p>
-    <blockquote>“I simulate black holes crashing into each other on supercomputers, build faster formulas for the ripples they send through space, and study the faint hum from giant black holes across the universe.”</blockquote>
+    <blockquote>“I simulate black hole mergers on supercomputers, build faster formulas for the ripples they send through space, and study the faint hum from giant black holes across the universe.”</blockquote>
     <p class="after">Shorter still: “Black holes. Crashing ones.”</p>
   </section>
 
@@ -616,7 +616,7 @@ footer {
     <div class="official">
       <p class="label">The official names, if you want to look them up</p>
       <p>The hum: supermassive black hole binary populations and the nanohertz gravitational-wave background</p>
-      <p>The crash: numerical relativity simulations of charged binary black holes</p>
+      <p>The merger: numerical relativity simulations of charged binary black holes</p>
       <p>The ringing: merger–ringdown modeling with the Backwards One Body (BOB) model</p>
     </div>
   </section>
@@ -783,7 +783,7 @@ footer {
   const RING_RATIO = 1.25;                  // pitch of the ringing ÷ pitch at the crash
   const TAU_RING = 0.25;                    // s for the ringing to fade by a factor e (slowed a lot from real life)
   const MERGE_DUR = 0.15;                   // s for the two black holes to melt into one (picture only)
-  const ACT2_START = T_PEAK - 0.25;         // act label switches to "Crash"
+  const ACT2_START = T_PEAK - 0.25;         // act label switches to "Merger"
   const ACT3_START = T_PEAK + MERGE_DUR;    // act label switches to "Ring down"
   const END = T_PEAK + 2.0;                 // last ripples have left the picture
   const TRACE_END = T_PEAK + 4 * TAU_RING;  // right edge of the wiggly line
@@ -2698,8 +2698,8 @@ footer {
       let stage = "";
       if (t > 0.05) stage = "The black holes spiral in, and their boxes jump along after them.";
       if (t >= 70) stage = "Closing in fast.";
-      if (t >= MESH_MERGE_START) stage = "The crash: two edges become one.";
-      if (t >= 96) stage = "After the crash, the boxes settle on the merged black hole.";
+      if (t >= MESH_MERGE_START) stage = "The merger: two edges become one.";
+      if (t >= 96) stage = "After the merger, the boxes settle on the new black hole.";
       let detail;
       if (meshZoom < 0.5 && merged) {
         detail = "The whole simulation. The merged black hole (circled) is too small to see from here.";
@@ -2919,19 +2919,19 @@ footer {
       function xOf(tt) { return pad + ((tt - tFirst) / (tLast - tFirst)) * (w - 2 * pad); }
       const mid = h / 2 + 6;
       const scale = h / 2 - 14;  // px for a value of 1, the NR peak |psi4|
-      // Mark the crash: the peak of the ripple, t = 0.
-      const xCrash = xOf(0);
+      // Mark the merger: the peak of the ripple, t = 0.
+      const xMerger = xOf(0);
       c.strokeStyle = col.rule;
       c.lineWidth = 1;
       c.beginPath();
-      c.moveTo(xCrash, 14);
-      c.lineTo(xCrash, h);
+      c.moveTo(xMerger, 14);
+      c.lineTo(xMerger, h);
       c.stroke();
       c.fillStyle = col.soft;
       c.font = MONO_FONT;
       c.textAlign = "center";
       c.textBaseline = "top";
-      c.fillText("crash", xCrash, 0);
+      c.fillText("merger", xMerger, 0);
       // Supercomputer (solid), then formula (dashed) on top. Real parts only.
       c.lineJoin = "round";
       c.lineWidth = 2;

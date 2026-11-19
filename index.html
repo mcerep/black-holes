@@ -2830,9 +2830,12 @@ footer {
   const MM_GOAL = 0.01;
   const MM_ANSWER_PITCH = 1;  // the charged remnant's own Omega_QNM and tau
   const MM_ANSWER_FADE = 1;
-  // Checked offline (bob_game_data.py q5paper): mismatch 0.0023 at the answer, lowest 0.0014 near
-  // (0.99, 0.96); under 0.01 for pitch x0.955-1.025 and fade x0.74-1.24. The sliders start at
-  // (0.75, 2.0), mismatch 0.40; fixing the pitch alone gives 0.064.
+  // The mismatch is scored on t >= 0 only, the window of the paper's comparisons (without their
+  // time-shift search); the plot still starts at -10 M. Checked offline (bob_game_data.py
+  // q5paper): mismatch 1.9e-4 at the answer, lowest 7.4e-5 near (1.0, 0.97); under 0.01 for
+  // pitch x0.958-1.040 and fade x0.77-1.24. The sliders start at (0.75, 2.0), mismatch 0.42;
+  // fixing the pitch alone gives 0.081. (Over the whole -10 ... 50 M window the answer scores 2.3e-3.)
+  const MM_I0 = NR_T.findIndex(function (tt) { return tt >= 0; });   // first sample that is scored
   const mmTarget = { re: NR_RE, im: NR_IM };
 
   // BOB psi4 (2,2) on the NR times, for pitch and fade given as multiples of the answer.
@@ -2857,13 +2860,13 @@ footer {
     return { re: re, im: im };
   }
 
-  // <h, d> = sum conj(h) d over the uniform grid, plus <h, h> and <d, d>.
+  // <h, d> = sum conj(h) d over the uniform grid from t = 0 on, plus <h, h> and <d, d>.
   function inner(h, d) {
     let hdRe = 0;
     let hdIm = 0;
     let hh = 0;
     let dd = 0;
-    for (let i = 0; i < MM_N; i++) {
+    for (let i = MM_I0; i < MM_N; i++) {
       hdRe += h.re[i] * d.re[i] + h.im[i] * d.im[i];
       hdIm += h.re[i] * d.im[i] - h.im[i] * d.re[i];
       hh += h.re[i] * h.re[i] + h.im[i] * h.im[i];
@@ -2883,7 +2886,7 @@ footer {
   function updateMatch() {
     const h = bobWave(Number(pitchInput.value), Number(fadeInput.value));
     const ov = inner(h, mmTarget);
-    // Mismatch = 1 - |<h, d>| / sqrt(<h, h> <d, d>). Taking |.| lines up the overall phase for
+    // Mismatch = 1 - |<h, d>| / sqrt(<h, h> <d, d>), over t >= 0. Taking |.| lines up the overall phase for
     // free, as in the paper's comparisons; max(0, ...) only trims round-off below zero.
     const mm = Math.max(0, 1 - Math.hypot(ov.re, ov.im) / Math.sqrt(ov.hh * ov.dd));
     // Draw the formula turned by that same best phase, arg <h, d>, so the lines can overlap.
@@ -2892,7 +2895,8 @@ footer {
     const sinT = Math.sin(theta);
     mmShown = new Float64Array(MM_N);
     for (let i = 0; i < MM_N; i++) mmShown[i] = h.re[i] * cosT - h.im[i] * sinT;
-    mmNum.textContent = mm.toFixed(3);
+    // Four decimals under 0.01, so a good match (about 0.0002) doesn't read as a perfect 0.000.
+    mmNum.textContent = mm < 0.01 ? mm.toFixed(4) : mm.toFixed(3);
     // Bar runs on a log scale: empty at mismatch 1, full at 0.001; the goal mark (0.01) sits at 2/3.
     mmFill.style.width = (100 * clamp01(-Math.log10(Math.max(mm, 0.001)) / 3)) + "%";
     if (mm < MM_GOAL) mmMsg.textContent = "Matched! That’s what I try to do for every kind of collision.";

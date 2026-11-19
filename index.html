@@ -2828,11 +2828,14 @@ footer {
   const BOB_TAU = 11.73370;        // M, 1 / omega_I of the charged remnant (Params_q5paper_qlm)
   const MM_N = NR_T.length;
   const MM_GOAL = 0.01;
-  const MM_ANSWER_PITCH = 1;  // the charged remnant's own Omega_QNM and tau
-  const MM_ANSWER_FADE = 1;
+  // "Show my answer": the lowest mismatch the sliders can reach (scored on t >= 0). Found offline
+  // with scipy Nelder-Mead (6.5e-5 at 0.9991, 0.9735), then the best point on the sliders' 0.001 x 0.01
+  // steps around it: 6.7e-5 at (0.999, 0.97). The remnant's own QNM values, (1, 1), score 1.9e-4.
+  const MM_ANSWER_PITCH = 0.999;
+  const MM_ANSWER_FADE = 0.97;
   // The mismatch is scored on t >= 0 only, the window of the paper's comparisons (without their
   // time-shift search); the plot still starts at -10 M. Checked offline (bob_game_data.py
-  // q5paper): mismatch 1.9e-4 at the answer, lowest 7.4e-5 near (1.0, 0.97); under 0.01 for
+  // q5paper): mismatch 1.9e-4 at the remnant's QNM values (1, 1), lowest 6.5e-5 near (0.999, 0.973); under 0.01 for
   // pitch x0.958-1.040 and fade x0.77-1.24. The sliders start at (0.75, 2.0), mismatch 0.42;
   // fixing the pitch alone gives 0.081. (Over the whole -10 ... 50 M window the answer scores 2.3e-3.)
   const MM_I0 = NR_T.findIndex(function (tt) { return tt >= 0; });   // first sample that is scored

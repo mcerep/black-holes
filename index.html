@@ -231,7 +231,7 @@ strong { font-weight: 700; }
 .mesh-canvas { aspect-ratio: 16 / 10; max-width: 100%; }
 .w-readout { font-size: 0.95rem; line-height: 1.45; min-height: 2.9em; }
 .mesh-readout { min-height: 4.35em; }  /* room for three lines, so the text changing during playback rarely moves the page */
-.w-note { font-size: 0.92rem; line-height: 1.5; color: var(--ink-soft); }
+.w-note { font-size: 0.97rem; line-height: 1.5; color: var(--ink-soft); }
 .seg { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .seg button, .toggle {
   font: 500 0.85rem/1 var(--font-mono);
@@ -457,7 +457,7 @@ footer {
         <p>LIGO caught its first in 2015, from two black holes that collided over a billion years ago. It won the 2017 Nobel Prize in Physics.</p>
         <div class="widget" id="ligo">
           <p class="w-readout">LIGO has two giant L-shaped detectors, one in Washington and one in Louisiana. A passing ripple stretches one arm of the L and squeezes the other, and lasers measure the change. This is what both recorded on September 14, 2015.</p>
-          <div class="legend"><span><i class="sw"></i>Washington detector</span><span><i class="sw l1"></i>Louisiana detector</span><span><i class="sw nr"></i>Thin line: a supercomputer simulation of this merger</span></div>
+          <div class="legend"><span><i class="sw"></i>Washington detector</span><span><i class="sw l1"></i>Louisiana detector</span><span><i class="sw nr"></i>Thin line: a supercomputer simulation of this merger, like the ones I run</span></div>
           <canvas id="ligo-canvas" class="w-canvas h200" role="img" aria-label="The first gravitational wave ever detected, on September 14, 2015, as two wiggly lines from LIGO's detectors in Washington and Louisiana. Both grow faster and bigger, peak, and die away within about a fifth of a second, matching the thin line, a supercomputer simulation of the same merger."></canvas>
           <div class="w-controls"><button type="button" class="btn small" id="ligo-play">Hear it</button></div>
           <p class="w-note">Up and down is the stretch. At its biggest, the 2.5-mile arms changed length by less than a hundredth of a proton’s width. Two detectors far apart saw the same thing, so it was real. The sound is the real recording, raised in pitch.</p>
@@ -524,16 +524,17 @@ footer {
       <p class="tag"><span class="num">2</span>Merger</p>
       <h3>Merging black holes on a supercomputer</h3>
       <p class="act-line">In act two, the black holes merge into one, in a fraction of a second.</p>
-      <p><strong>My part:</strong> simulating black hole mergers on a supercomputer. My twist is that my black holes carry electric charge, the same stuff behind static electricity. Real ones probably carry very little, but nobody knows for sure.</p>
+      <p><strong>My part:</strong> simulating black hole mergers on a supercomputer. My twist is that my black holes carry electric charge, the same stuff behind static electricity.</p>
       <p>Einstein’s equations for a collision are too tangled to solve with pencil and paper. Instead, a supercomputer chops space into boxes, like the pixels of a photo, and keeps track of how bent space is in each one. Then it steps everything forward in time, a sliver at a time. The boxes get smaller near the black holes, where things change fastest.</p>
       <div class="widget" id="mesh">
+        <p class="w-readout">Each box is a patch of space. Notice how the boxes shrink around the two black holes.</p>
         <canvas id="mesh-canvas" class="w-canvas mesh-canvas" role="img" aria-label="Space divided into boxes, from one of my simulations: big boxes far away, smaller and smaller boxes nested around the black holes, whose edges are drawn as black circles. Press play to watch the boxes follow the black holes as they spiral together and merge."></canvas>
         <label class="slider-row" for="mesh-zoom"><span>Zoom</span><input type="range" id="mesh-zoom" min="0" max="10.6" step="0.01" value="7"></label>
         <label class="slider-row" for="mesh-time"><span>Time</span><input type="range" id="mesh-time" min="0" max="110" step="0.1" value="0"></label>
         <div class="w-controls">
           <button type="button" class="btn small" id="mesh-play">Play the merger</button>
         </div>
-        <p class="w-readout mesh-readout" id="mesh-readout">The black circles are the black holes, at their true size. The smallest boxes crowd around them, where things change fastest. Zoomed in 130 times.</p>
+        <p class="w-readout mesh-readout" id="mesh-readout">The black circles are the black holes, at their true size. The smallest boxes crowd around them, where things change fastest.</p>
         <p class="w-note">From one of my real simulations, with the boxes drawn bigger so you can see them. Slide Zoom all the way left to see the whole thing.</p>
       </div>
       <p>All those boxes take a lot of computing. Here’s one of my recent runs, next to a laptop doing the same job.</p>
@@ -552,6 +553,10 @@ footer {
         </div>
         <p class="w-note">That’s if a laptop even had enough memory. It doesn’t.</p>
       </div>
+      <aside class="analogy why">
+        <p class="label">Why it matters</p>
+        <p>Black holes are usually assumed to have no charge, but nobody has actually tested that. There are ways a black hole could pick up a real amount of charge, either ordinary electric charge or stranger kinds that some theories predict. Finding a charged black hole would open the door to a lot of new physics.</p>
+      </aside>
       <aside class="analogy">
         <p class="label">Think of it like</p>
         <p>Car crash tests. Engineers can’t learn everything about a crash from formulas, so they crash real cars and film them. I do the same with black hole mergers, inside a computer.</p>
@@ -631,7 +636,7 @@ footer {
   "use strict";
   const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const TAU = 2 * Math.PI;
-  const MONO_FONT = '500 12px "IBM Plex Mono", ui-monospace, monospace';
+  const MONO_FONT = '500 13px "IBM Plex Mono", ui-monospace, monospace';
 
   // ===========================================================================
   // Shared helpers
@@ -1607,15 +1612,54 @@ footer {
       c.globalAlpha = fade;
     }
 
-    c.font = MONO_FONT;
-    c.textAlign = "center";
+    // Labels: each column (black hole on the left, the reference on the right) has a name and a note.
+    // Use the largest size, 13 down to 11 px, at which they fit centred under their objects; three
+    // columns on a ~860 px screen leave this canvas only ~220 px wide, and there even 11 px centred
+    // labels collide, so then each column is pinned to its own edge of the canvas instead.
+    const LABEL_SIZES = [13, 12, 11];   // px, tried largest first
+    const LABEL_GAP = 8;                // px kept clear between the two columns
+    const LABEL_MARGIN = 2;             // px kept clear of the canvas edges
     c.textBaseline = "top";
+    let labelPx = LABEL_SIZES[LABEL_SIZES.length - 1];
+    let centred = false;   // if nothing fits, 11 px pinned to the edges
+    let found = false;
+    for (const pass of ["centred", "edges"]) {
+      for (const px of LABEL_SIZES) {
+        c.font = "500 " + px + 'px "IBM Plex Mono", ui-monospace, monospace';
+        const leftW = Math.max(c.measureText("black hole").width, c.measureText(item.rLabel).width);
+        const rightW = Math.max(c.measureText(ref.name).width, c.measureText(ref.note).width);
+        let fits;
+        if (pass === "centred") {
+          const insideLeft = bx - leftW / 2 >= LABEL_MARGIN;
+          const insideRight = rx + rightW / 2 <= w - LABEL_MARGIN;
+          const apart = bx + leftW / 2 + LABEL_GAP <= rx - rightW / 2;
+          fits = insideLeft && insideRight && apart;
+        } else {
+          fits = leftW + rightW + LABEL_GAP <= w - 2 * LABEL_MARGIN;
+        }
+        if (fits) {
+          labelPx = px;
+          centred = pass === "centred";
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+    c.font = "500 " + labelPx + 'px "IBM Plex Mono", ui-monospace, monospace';
+    const leftX = centred ? bx : LABEL_MARGIN;
+    const rightX = centred ? rx : w - LABEL_MARGIN;
     c.fillStyle = col.ink;
-    c.fillText("black hole", bx, h - 40);
-    c.fillText(ref.name, rx, h - 40);
+    c.textAlign = centred ? "center" : "left";
+    c.fillText("black hole", leftX, h - 40);
     c.fillStyle = col.soft;
-    c.fillText(item.rLabel, bx, h - 26);
-    c.fillText(ref.note, rx, h - 26);
+    c.fillText(item.rLabel, leftX, h - 26);
+    c.fillStyle = col.ink;
+    c.textAlign = centred ? "center" : "right";
+    c.fillText(ref.name, rightX, h - 40);
+    c.fillStyle = col.soft;
+    c.fillText(ref.note, rightX, h - 26);
+    c.font = MONO_FONT;
     c.textAlign = "left";
     c.fillStyle = col.ink;
     c.fillText("side by side, to scale", 6, 4);
@@ -2531,7 +2575,6 @@ footer {
   }
 
   // Two significant figures for the readout (2,521 → 2,500).
-  function twoFigures(x) { return Number(x.toPrecision(2)).toLocaleString(); }
 
   const meshEl = document.getElementById("mesh");
   const meshCanvas = document.getElementById("mesh-canvas");
@@ -2694,7 +2737,6 @@ footer {
       let holeR = rEach;
       if (merged) holeR = MESH_HORIZON_MERGED;
       const hr = holeR * ppu;
-      const mag = twoFigures(Math.pow(2, meshZoom));
       let stage = "";
       if (t > 0.05) stage = "The black holes spiral in, and their boxes jump along after them.";
       if (t >= 70) stage = "Closing in fast.";
@@ -2706,7 +2748,7 @@ footer {
       } else if (meshZoom < 0.5) {
         detail = "The whole simulation. The black holes (circled) are too small to see from here. Zoom in, or press play.";
       } else if (hr < 3) {
-        detail = "Zoomed in " + mag + " times. The black holes (circled) are still too small to see.";
+        detail = "The black holes (circled) are still too small to see. Zoom in further.";
       } else {
         // How many black holes are in the picture decides "circle is" versus "circles are".
         let inView = 0;
@@ -2715,7 +2757,7 @@ footer {
         }
         let edge = "The black circles are the black holes, at their true size.";
         if (inView === 1) edge = "The black circle is a black hole, at its true size.";
-        detail = edge + " The smallest boxes crowd around them, where things change fastest. Zoomed in " + mag + " times.";
+        detail = edge + " The smallest boxes crowd around them, where things change fastest.";
       }
       let text = detail;
       if (stage) text = stage + " " + detail;
